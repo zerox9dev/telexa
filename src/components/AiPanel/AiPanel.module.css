@@ -1,0 +1,233 @@
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  animation: fadeIn var(--duration-slow) var(--ease-out);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sparkle {
+  font-size: 16px;
+}
+
+.headerTitle {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  background: linear-gradient(135deg, #E3F2FD, #EDE7F6);
+  color: var(--tg-blue);
+  border-radius: var(--radius-full);
+  letter-spacing: 0.02em;
+}
+
+.closeBtn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-xs);
+  background: none;
+  color: var(--text-muted);
+  font-size: 16px;
+  transition: all var(--duration-fast);
+}
+
+.closeBtn:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Topic input */
+.topicRow {
+  display: flex;
+  gap: 8px;
+}
+
+.topicInput {
+  flex: 1;
+  padding: 9px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--text);
+  transition: all var(--duration-fast);
+}
+
+.topicInput:focus {
+  border-color: var(--tg-blue);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px rgba(34, 158, 217, 0.1);
+}
+
+.topicInput::placeholder {
+  color: var(--text-muted);
+}
+
+.generateBtn {
+  padding: 9px 16px;
+  background: linear-gradient(135deg, var(--tg-blue), #5BC0F8);
+  color: white;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: all var(--duration-normal) var(--ease-out);
+  white-space: nowrap;
+}
+
+.generateBtn:hover {
+  box-shadow: 0 4px 14px rgba(34, 158, 217, 0.3);
+  transform: translateY(-1px);
+}
+
+.generateBtn:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Options row */
+.options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.optionBtn {
+  padding: 5px 10px;
+  background: var(--bg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all var(--duration-fast);
+  letter-spacing: -0.01em;
+}
+
+.optionBtn:hover {
+  border-color: var(--tg-blue);
+  color: var(--tg-blue);
+}
+
+.optionActive {
+  background: var(--tg-blue-light);
+  border-color: var(--tg-blue);
+  color: var(--tg-blue);
+  font-weight: 600;
+}
+
+/* Improve row */
+.improveRow {
+  display: flex;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-light);
+}
+
+.improveBtn {
+  padding: 6px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all var(--duration-fast);
+}
+
+.improveBtn:hover {
+  border-color: var(--tg-blue);
+  color: var(--tg-blue);
+  background: var(--tg-blue-pale);
+}
+
+.improveBtn:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Loading */
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--border-light);
+  border-top-color: var(--tg-blue);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error */
+.error {
+  font-size: 12px;
+  color: var(--tg-red);
+  padding: 6px 10px;
+  background: var(--tg-red-light);
+  border-radius: var(--radius-xs);
+}
+
+/* Not configured */
+.notConfigured {
+  text-align: center;
+  padding: 8px 0;
+}
+
+.notConfiguredText {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.settingsLink {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tg-blue);
+  background: none;
+  transition: opacity var(--duration-fast);
+}
+
+.settingsLink:hover {
+  opacity: 0.8;
+}

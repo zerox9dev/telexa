@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useChannels } from '../../hooks/useChannels'
 import { usePosts } from '../../hooks/usePosts'
+import { AiPanel } from '../../components/AiPanel/AiPanel'
 import styles from './Editor.module.css'
 
 export function Editor() {
@@ -16,11 +17,14 @@ export function Editor() {
   const [sending, setSending] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [showAi, setShowAi] = useState(false)
 
   const now = new Date()
   const timeStr = scheduledAt
     ? new Date(scheduledAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })
     : now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })
+
+  const selectedChannel = channels.find(c => c.id === channelId)
 
   const handleSave = async (status: 'draft' | 'scheduled') => {
     if (!text.trim()) return setError('Write something first')
@@ -53,7 +57,6 @@ export function Editor() {
     setError('')
     setSuccess('')
     try {
-      // Create + send immediately
       const post = await createPost({
         channel_id: channelId,
         text: text.trim(),
@@ -77,6 +80,13 @@ export function Editor() {
           <p className={styles.subtitle}>Compose and schedule</p>
         </div>
         <div className={styles.actions}>
+          <button
+            className={styles.aiBtn}
+            onClick={() => setShowAi(v => !v)}
+            data-active={showAi || undefined}
+          >
+            ✦ AI
+          </button>
           <button
             className={styles.draftBtn}
             onClick={() => handleSave('draft')}
@@ -111,6 +121,15 @@ export function Editor() {
       {error && <div className={styles.error}>{error}</div>}
       {success && <div className={styles.success}>{success}</div>}
 
+      {showAi && (
+        <AiPanel
+          channelName={selectedChannel?.title}
+          currentText={text}
+          onGenerated={setText}
+          onClose={() => setShowAi(false)}
+        />
+      )}
+
       <div className={styles.workspace}>
         {/* Left: Editor */}
         <div className={styles.editorPanel}>
@@ -137,7 +156,7 @@ export function Editor() {
                 className={styles.textarea}
                 value={text}
                 onChange={e => setText(e.target.value)}
-                placeholder="Write your message..."
+                placeholder="Write your message or use AI to generate..."
                 rows={10}
                 maxLength={4096}
               />
@@ -178,7 +197,7 @@ export function Editor() {
           <div className={styles.previewHeader}>
             <span className={styles.previewLabel}>Preview</span>
             <span className={styles.previewChannel}>
-              {channels.find(c => c.id === channelId)?.title || 'Channel Name'}
+              {selectedChannel?.title || 'Channel Name'}
             </span>
           </div>
           <div className={styles.previewChat}>

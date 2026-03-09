@@ -315,6 +315,42 @@
   border-color: #FFD4D4;
 }
 
+/* Provider toggle */
+.providerToggle {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.providerBtn {
+  flex: 1;
+  padding: 9px 16px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  transition: all var(--duration-fast);
+  border-right: 1px solid var(--border-light);
+  letter-spacing: -0.01em;
+}
+
+.providerBtn:last-child {
+  border-right: none;
+}
+
+.providerBtn:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.providerActive {
+  background: var(--tg-blue-light);
+  color: var(--tg-blue);
+}
+
 .signOutBtn {
   padding: 10px 20px;
   background: none;

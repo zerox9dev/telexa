@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useChannels } from '../../hooks/useChannels'
 import { useAuth } from '../../lib/auth'
+import { getAiSettings, saveAiSettings } from '../../lib/ai'
 import styles from './Settings.module.css'
 
 export function Settings() {
@@ -13,6 +14,20 @@ export function Settings() {
   const [connecting, setConnecting] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+
+  // AI settings
+  const [aiProvider, setAiProvider] = useState<'openai' | 'anthropic'>('openai')
+  const [aiApiKey, setAiApiKey] = useState('')
+  const [showAiKey, setShowAiKey] = useState(false)
+  const [aiSaved, setAiSaved] = useState(false)
+
+  useEffect(() => {
+    const s = getAiSettings()
+    if (s) {
+      setAiProvider(s.provider)
+      setAiApiKey(s.apiKey)
+    }
+  }, [])
 
   const handleConnect = async () => {
     if (!botToken.includes(':')) return setError('Invalid bot token format')
@@ -33,13 +48,20 @@ export function Settings() {
     }
   }
 
+  const handleSaveAi = () => {
+    saveAiSettings(aiProvider, aiApiKey)
+    setAiSaved(true)
+    setTimeout(() => setAiSaved(false), 2000)
+  }
+
   return (
     <div className={styles.page}>
       <header className={styles.header}>
         <h1 className={styles.title}>Settings</h1>
-        <p className={styles.subtitle}>Manage your bot and channels</p>
+        <p className={styles.subtitle}>Manage your bot, channels, and AI</p>
       </header>
 
+      {/* Connect Channel */}
       <section className={styles.card}>
         <div className={styles.cardHeader}>
           <div className={styles.cardIcon}>
@@ -104,6 +126,7 @@ export function Settings() {
         </div>
       </section>
 
+      {/* Channels */}
       <section className={styles.card}>
         <div className={styles.cardHeader}>
           <div className={styles.cardIcon}>
@@ -150,6 +173,68 @@ export function Settings() {
         )}
       </section>
 
+      {/* AI Settings */}
+      <section className={styles.card}>
+        <div className={styles.cardHeader}>
+          <div className={styles.cardIcon}>✦</div>
+          <div>
+            <h2 className={styles.cardTitle}>AI Drafts</h2>
+            <p className={styles.cardDesc}>
+              Connect OpenAI or Anthropic to generate post drafts from topics
+            </p>
+          </div>
+        </div>
+
+        <div className={styles.connectForm}>
+          <div className={styles.field}>
+            <label className={styles.fieldLabel}>Provider</label>
+            <div className={styles.providerToggle}>
+              <button
+                className={`${styles.providerBtn} ${aiProvider === 'openai' ? styles.providerActive : ''}`}
+                onClick={() => setAiProvider('openai')}
+              >
+                OpenAI
+              </button>
+              <button
+                className={`${styles.providerBtn} ${aiProvider === 'anthropic' ? styles.providerActive : ''}`}
+                onClick={() => setAiProvider('anthropic')}
+              >
+                Anthropic
+              </button>
+            </div>
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel}>API Key</label>
+            <div className={styles.tokenInput}>
+              <input
+                type={showAiKey ? 'text' : 'password'}
+                className={styles.input}
+                value={aiApiKey}
+                onChange={e => setAiApiKey(e.target.value)}
+                placeholder={aiProvider === 'openai' ? 'sk-...' : 'sk-ant-...'}
+                spellCheck={false}
+              />
+              <button
+                className={styles.toggleBtn}
+                onClick={() => setShowAiKey(!showAiKey)}
+              >
+                {showAiKey ? '🙈' : '👁'}
+              </button>
+            </div>
+          </div>
+
+          <button
+            className={styles.connectBtn}
+            onClick={handleSaveAi}
+            disabled={!aiApiKey.trim()}
+          >
+            {aiSaved ? 'Saved ✓' : 'Save AI Settings'}
+          </button>
+        </div>
+      </section>
+
+      {/* Account */}
       <section className={styles.card}>
         <div className={styles.cardHeader}>
           <div className={styles.cardIcon}>
