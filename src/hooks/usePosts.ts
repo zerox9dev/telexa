@@ -1,7 +1,19 @@
 import { useCallback, useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase'
-import { useAuth } from '../lib/auth'
 import type { Post, PostStatus } from '../lib/database.types'
+
+const STORAGE_KEY = 'telexa_posts'
+
+function loadPosts(): Post[] {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
+  } catch {
+    return []
+  }
+}
+
+function savePosts(posts: Post[]) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(posts))
+}
 
 interface CreatePostInput {
   channel_id: string
@@ -12,71 +24,66 @@ interface CreatePostInput {
 }
 
 export function usePosts(channelId?: string) {
-  const { user } = useAuth()
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(true)
 
-  const fetchPosts = useCallback(async () => {
-    if (!user) return
-    setLoading(true)
-
-    let query = supabase
-      .from('posts')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('scheduled_at', { ascending: true, nullsFirst: false })
-
+  const fetchPosts = useCallback(() => {
+    let all = loadPosts()
     if (channelId) {
-      query = query.eq('channel_id', channelId)
+      all = all.filter(p => p.channel_id === channelId)
     }
-
-    const { data } = await query
-    setPosts(data || [])
+    all.sort((a, b) => {
+      if (a.scheduled_at && b.scheduled_at) return a.scheduled_at.localeCompare(b.scheduled_at)
+      if (a.scheduled_at) return -1
+      if (b.scheduled_at) return 1
+      return b.created_at.localeCompare(a.created_at)
+    })
+    setPosts(all)
     setLoading(false)
-  }, [user, channelId])
+  }, [channelId])
 
   useEffect(() => {
     fetchPosts()
   }, [fetchPosts])
 
   const createPost = async (input: CreatePostInput) => {
-    if (!user) throw new Error('Not authenticated')
-
-    const { data, error } = await supabase.from('posts').insert({
-      user_id: user.id,
+    const now = new Date().toISOString()
+    const post: Post = {
+      id: crypto.randomUUID(),
+      user_id: 'local-user',
       channel_id: input.channel_id,
       text: input.text,
       media_url: input.media_url || null,
-      scheduled_at: input.scheduled_at || null,
       status: input.status || (input.scheduled_at ? 'scheduled' : 'draft'),
+      scheduled_at: input.scheduled_at || null,
       published_at: null,
       views: null,
       error: null,
-    }).select().single()
+      created_at: now,
+      updated_at: now,
+    }
 
-    if (error) throw error
-    setPosts(prev => [...prev, data])
-    return data
+    const all = loadPosts()
+    all.push(post)
+    savePosts(all)
+    setPosts(prev => [...prev, post])
+    return post
   }
 
   const updatePost = async (postId: string, updates: Partial<CreatePostInput>) => {
-    const { data, error } = await supabase
-      .from('posts')
-      .update({
-        ...updates,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', postId)
-      .select()
-      .single()
+    const all = loadPosts()
+    const idx = all.findIndex(p => p.id === postId)
+    if (idx === -1) throw new Error('Post not found')
 
-    if (error) throw error
-    setPosts(prev => prev.map(p => p.id === postId ? data : p))
-    return data
+    all[idx] = { ...all[idx], ...updates, updated_at: new Date().toISOString() }
+    savePosts(all)
+    setPosts(prev => prev.map(p => p.id === postId ? all[idx] : p))
+    return all[idx]
   }
 
   const deletePost = async (postId: string) => {
-    await supabase.from('posts').delete().eq('id', postId)
+    const all = loadPosts().filter(p => p.id !== postId)
+    savePosts(all)
     setPosts(prev => prev.filter(p => p.id !== postId))
   }
 

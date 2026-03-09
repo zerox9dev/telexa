@@ -1,10 +1,7 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
-import type { User, Session } from '@supabase/supabase-js'
-import { supabase } from './supabase'
+import { createContext, useContext, useState, type ReactNode } from 'react'
 
 interface AuthState {
-  user: User | null
-  session: Session | null
+  user: { id: string; email: string } | null
   loading: boolean
   signInWithGoogle: () => Promise<void>
   signOut: () => Promise<void>
@@ -12,42 +9,24 @@ interface AuthState {
 
 const AuthContext = createContext<AuthState | null>(null)
 
+// Temporary local user — no Supabase auth required
+const LOCAL_USER = { id: 'local-user', email: 'local@telexa.app' }
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
-  const [session, setSession] = useState<Session | null>(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
-
-    return () => subscription.unsubscribe()
-  }, [])
+  const [user] = useState(LOCAL_USER)
 
   const signInWithGoogle = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/dashboard`,
-      },
-    })
+    // TODO: Supabase Google OAuth
+    console.log('Google auth not configured yet')
   }
 
   const signOut = async () => {
-    await supabase.auth.signOut()
+    // TODO: Supabase sign out
+    console.log('Sign out not configured yet')
   }
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, signInWithGoogle, signOut }}>
+    <AuthContext.Provider value={{ user, loading: false, signInWithGoogle, signOut }}>
       {children}
     </AuthContext.Provider>
   )
