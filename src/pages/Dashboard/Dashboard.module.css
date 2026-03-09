@@ -204,6 +204,75 @@
   line-height: 1.5;
 }
 
+/* Post list */
+.postList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.postItem {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+  animation: fadeIn 0.3s ease both;
+}
+
+.postItem:hover {
+  border-color: var(--tg-blue-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.postPreview {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.postMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.postStatus {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--tg-blue);
+}
+
+.postTime {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* Onboarding */
+.onboarding {
+  background: var(--tg-blue-pale);
+  border: 1px solid var(--tg-blue-light);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  text-align: center;
+  animation: fadeIn 0.5s ease both;
+}
+
+.onboardingTitle {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.onboardingDesc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
 @media (max-width: 768px) {
   .stats {
     grid-template-columns: repeat(2, 1fr);

@@ -1,4 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom'
+import { useChannels } from '../../hooks/useChannels'
+import { usePosts } from '../../hooks/usePosts'
 import styles from './Sidebar.module.css'
 
 const NAV_ITEMS = [
@@ -40,6 +42,12 @@ const ICONS: Record<string, JSX.Element> = {
 
 export function Sidebar() {
   const navigate = useNavigate()
+  const { channels } = useChannels()
+  const { posts } = usePosts()
+
+  const postCount = posts.length
+  const limit = 10 // free plan
+  const pct = Math.min((postCount / limit) * 100, 100)
 
   return (
     <aside className={styles.sidebar}>
@@ -76,19 +84,28 @@ export function Sidebar() {
       <div className={styles.channels}>
         <div className={styles.channelsHeader}>
           <span>Channels</span>
-          <button className={styles.addChannel}>+</button>
+          <button className={styles.addChannel} onClick={() => navigate('/settings')}>+</button>
         </div>
-        <div className={styles.noChannels}>
-          No channels yet
-        </div>
+        {channels.length === 0 ? (
+          <div className={styles.noChannels}>No channels yet</div>
+        ) : (
+          <div className={styles.channelList}>
+            {channels.map(ch => (
+              <div key={ch.id} className={styles.channelItem}>
+                <div className={styles.channelDot} />
+                <span className={styles.channelName}>{ch.title}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className={styles.footer}>
         <div className={styles.usage}>
           <div className={styles.usageBar}>
-            <div className={styles.usageFill} style={{ width: '30%' }} />
+            <div className={styles.usageFill} style={{ width: `${pct}%` }} />
           </div>
-          <span className={styles.usageText}>3 / 10 posts</span>
+          <span className={styles.usageText}>{postCount} / {limit} posts</span>
         </div>
         <button className={styles.upgrade}>Upgrade to Pro</button>
       </div>

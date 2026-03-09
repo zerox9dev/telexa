@@ -166,6 +166,37 @@
   text-align: center;
 }
 
+.channelList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.channelItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 12px;
+  border-radius: var(--radius-sm);
+  cursor: default;
+}
+
+.channelDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--tg-green);
+  flex-shrink: 0;
+}
+
+.channelName {
+  font-size: 13px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* Footer */
 .footer {
   padding-top: 16px;

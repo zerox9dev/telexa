@@ -1,14 +1,46 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useChannels } from '../../hooks/useChannels'
+import { usePosts } from '../../hooks/usePosts'
 import styles from './Editor.module.css'
 
 export function Editor() {
+  const navigate = useNavigate()
+  const { channels } = useChannels()
+  const { createPost } = usePosts()
+
+  const [channelId, setChannelId] = useState('')
   const [text, setText] = useState('')
   const [scheduledAt, setScheduledAt] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
 
   const now = new Date()
   const timeStr = scheduledAt
     ? new Date(scheduledAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })
     : now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })
+
+  const handleSave = async (status: 'draft' | 'scheduled') => {
+    if (!text.trim()) return setError('Write something first')
+    if (status === 'scheduled' && !channelId) return setError('Select a channel')
+    if (status === 'scheduled' && !scheduledAt) return setError('Pick a date and time')
+
+    setSaving(true)
+    setError('')
+    try {
+      await createPost({
+        channel_id: channelId || channels[0]?.id || '',
+        text: text.trim(),
+        scheduled_at: scheduledAt ? new Date(scheduledAt).toISOString() : undefined,
+        status,
+      })
+      navigate('/dashboard')
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to save')
+    } finally {
+      setSaving(false)
+    }
+  }
 
   return (
     <div className={styles.page}>
@@ -18,23 +50,44 @@ export function Editor() {
           <p className={styles.subtitle}>Compose and schedule</p>
         </div>
         <div className={styles.actions}>
-          <button className={styles.draftBtn}>Save Draft</button>
-          <button className={styles.scheduleBtn}>
+          <button
+            className={styles.draftBtn}
+            onClick={() => handleSave('draft')}
+            disabled={saving}
+          >
+            Save Draft
+          </button>
+          <button
+            className={styles.scheduleBtn}
+            onClick={() => handleSave('scheduled')}
+            disabled={saving}
+          >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M2 3L14 8L2 13V9L10 8L2 7V3Z" fill="currentColor" />
             </svg>
-            Schedule
+            {saving ? 'Saving...' : 'Schedule'}
           </button>
         </div>
       </header>
+
+      {error && <div className={styles.error}>{error}</div>}
 
       <div className={styles.workspace}>
         {/* Left: Editor */}
         <div className={styles.editorPanel}>
           <div className={styles.field}>
             <label className={styles.label}>Channel</label>
-            <select className={styles.select}>
+            <select
+              className={styles.select}
+              value={channelId}
+              onChange={e => setChannelId(e.target.value)}
+            >
               <option value="">Select channel...</option>
+              {channels.map(ch => (
+                <option key={ch.id} value={ch.id}>
+                  {ch.title} {ch.username ? `(@${ch.username})` : ''}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -47,6 +100,7 @@ export function Editor() {
                 onChange={e => setText(e.target.value)}
                 placeholder="Write your message..."
                 rows={10}
+                maxLength={4096}
               />
               <div className={styles.textareaFooter}>
                 <button className={styles.attachBtn} title="Attach media">
@@ -73,8 +127,8 @@ export function Editor() {
             </div>
             <div className={styles.field}>
               <label className={styles.label}>Timezone</label>
-              <select className={styles.select}>
-                <option>Auto-detect</option>
+              <select className={styles.select} defaultValue={Intl.DateTimeFormat().resolvedOptions().timeZone}>
+                <option>{Intl.DateTimeFormat().resolvedOptions().timeZone}</option>
               </select>
             </div>
           </div>
@@ -84,7 +138,9 @@ export function Editor() {
         <div className={styles.previewPanel}>
           <div className={styles.previewHeader}>
             <span className={styles.previewLabel}>Preview</span>
-            <span className={styles.previewChannel}>Channel Name</span>
+            <span className={styles.previewChannel}>
+              {channels.find(c => c.id === channelId)?.title || 'Channel Name'}
+            </span>
           </div>
           <div className={styles.previewChat}>
             <div className={styles.chatBg}>

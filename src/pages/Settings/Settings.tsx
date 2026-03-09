@@ -1,9 +1,37 @@
 import { useState } from 'react'
+import { useChannels } from '../../hooks/useChannels'
+import { useAuth } from '../../lib/auth'
 import styles from './Settings.module.css'
 
 export function Settings() {
+  const { user, signOut } = useAuth()
+  const { channels, connectBot, removeChannel } = useChannels()
+
   const [botToken, setBotToken] = useState('')
+  const [channelUsername, setChannelUsername] = useState('')
   const [showToken, setShowToken] = useState(false)
+  const [connecting, setConnecting] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+
+  const handleConnect = async () => {
+    if (!botToken.includes(':')) return setError('Invalid bot token format')
+    if (!channelUsername.trim()) return setError('Enter channel username (e.g. @mychannel)')
+
+    setConnecting(true)
+    setError('')
+    setSuccess('')
+    try {
+      const channel = await connectBot(botToken, channelUsername.trim())
+      setSuccess(`Connected "${channel.title}" ✓`)
+      setBotToken('')
+      setChannelUsername('')
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Connection failed')
+    } finally {
+      setConnecting(false)
+    }
+  }
 
   return (
     <div className={styles.page}>
@@ -21,34 +49,57 @@ export function Settings() {
             </svg>
           </div>
           <div>
-            <h2 className={styles.cardTitle}>Connect Telegram Bot</h2>
+            <h2 className={styles.cardTitle}>Connect Telegram Channel</h2>
             <p className={styles.cardDesc}>
-              Create a bot via <a href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a>, 
-              then paste the token. Add the bot as admin to your channel.
+              1. Create a bot via <a href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a><br />
+              2. Add the bot as <strong>admin</strong> to your channel<br />
+              3. Paste the token and channel username below
             </p>
           </div>
         </div>
 
-        <div className={styles.tokenField}>
-          <div className={styles.tokenInput}>
+        {error && <div className={styles.errorMsg}>{error}</div>}
+        {success && <div className={styles.successMsg}>{success}</div>}
+
+        <div className={styles.connectForm}>
+          <div className={styles.field}>
+            <label className={styles.fieldLabel}>Bot Token</label>
+            <div className={styles.tokenInput}>
+              <input
+                type={showToken ? 'text' : 'password'}
+                className={styles.input}
+                value={botToken}
+                onChange={e => setBotToken(e.target.value)}
+                placeholder="123456:ABC-DEF1234ghIkl-zyx57W2v"
+                spellCheck={false}
+              />
+              <button
+                className={styles.toggleBtn}
+                onClick={() => setShowToken(!showToken)}
+              >
+                {showToken ? '🙈' : '👁'}
+              </button>
+            </div>
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel}>Channel Username</label>
             <input
-              type={showToken ? 'text' : 'password'}
-              className={styles.input}
-              value={botToken}
-              onChange={e => setBotToken(e.target.value)}
-              placeholder="123456:ABC-DEF1234ghIkl-zyx57W2v"
+              type="text"
+              className={styles.inputFull}
+              value={channelUsername}
+              onChange={e => setChannelUsername(e.target.value)}
+              placeholder="@mychannel"
               spellCheck={false}
             />
-            <button
-              className={styles.toggleBtn}
-              onClick={() => setShowToken(!showToken)}
-              title={showToken ? 'Hide' : 'Show'}
-            >
-              {showToken ? '🙈' : '👁'}
-            </button>
           </div>
-          <button className={styles.connectBtn} disabled={!botToken.includes(':')}>
-            Connect
+
+          <button
+            className={styles.connectBtn}
+            onClick={handleConnect}
+            disabled={connecting || !botToken.includes(':')}
+          >
+            {connecting ? 'Connecting...' : 'Connect Channel'}
           </button>
         </div>
       </section>
@@ -63,14 +114,40 @@ export function Settings() {
           </div>
           <div>
             <h2 className={styles.cardTitle}>Your Channels</h2>
-            <p className={styles.cardDesc}>Channels managed by your connected bot</p>
           </div>
         </div>
 
-        <div className={styles.emptyChannels}>
-          <div className={styles.emptyDot} />
-          <span>No channels connected yet</span>
-        </div>
+        {channels.length === 0 ? (
+          <div className={styles.emptyChannels}>
+            <div className={styles.emptyDot} />
+            <span>No channels connected yet</span>
+          </div>
+        ) : (
+          <div className={styles.channelList}>
+            {channels.map(ch => (
+              <div key={ch.id} className={styles.channelItem}>
+                <div className={styles.channelInfo}>
+                  <div className={styles.channelAvatar}>
+                    {ch.title.charAt(0)}
+                  </div>
+                  <div>
+                    <div className={styles.channelName}>{ch.title}</div>
+                    <div className={styles.channelMeta}>
+                      {ch.username && `@${ch.username} · `}
+                      {ch.member_count?.toLocaleString()} subscribers
+                    </div>
+                  </div>
+                </div>
+                <button
+                  className={styles.removeBtn}
+                  onClick={() => removeChannel(ch.id)}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       <section className={styles.card}>
@@ -89,13 +166,21 @@ export function Settings() {
         <div className={styles.fields}>
           <div className={styles.fieldRow}>
             <span className={styles.fieldLabel}>Email</span>
-            <span className={styles.fieldValue}>—</span>
+            <span className={styles.fieldValue}>{user?.email || '—'}</span>
           </div>
           <div className={styles.fieldRow}>
             <span className={styles.fieldLabel}>Plan</span>
             <span className={`${styles.fieldValue} ${styles.planBadge}`}>Free</span>
           </div>
+          <div className={styles.fieldRow}>
+            <span className={styles.fieldLabel}>Channels</span>
+            <span className={styles.fieldValue}>{channels.length}</span>
+          </div>
         </div>
+
+        <button className={styles.signOutBtn} onClick={signOut}>
+          Sign Out
+        </button>
       </section>
     </div>
   )

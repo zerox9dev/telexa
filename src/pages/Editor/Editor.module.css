@@ -283,6 +283,18 @@
   font-size: 14px;
 }
 
+/* Error */
+.error {
+  padding: 10px 14px;
+  background: #FFF0F0;
+  border: 1px solid #FFD4D4;
+  border-radius: var(--radius-sm);
+  color: var(--tg-red);
+  font-size: 13px;
+  font-weight: 500;
+  animation: scaleIn 0.2s ease;
+}
+
 @media (max-width: 900px) {
   .workspace {
     grid-template-columns: 1fr;

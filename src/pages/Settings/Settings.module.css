@@ -197,3 +197,138 @@
   border-radius: 20px;
   font-size: 12px;
 }
+
+/* Connect form */
+.connectForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inputFull {
+  padding: 10px 12px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  font-size: 14px;
+  font-family: var(--font-mono);
+  color: var(--text);
+  transition: all 0.15s;
+}
+
+.inputFull:focus {
+  border-color: var(--tg-blue);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px var(--tg-blue-light);
+}
+
+.errorMsg {
+  padding: 10px 14px;
+  background: #FFF0F0;
+  border: 1px solid #FFD4D4;
+  border-radius: var(--radius-sm);
+  color: var(--tg-red);
+  font-size: 13px;
+  animation: scaleIn 0.2s ease;
+}
+
+.successMsg {
+  padding: 10px 14px;
+  background: var(--tg-green-pale);
+  border: 1px solid #C8E6C9;
+  border-radius: var(--radius-sm);
+  color: var(--tg-green);
+  font-size: 13px;
+  font-weight: 600;
+  animation: scaleIn 0.2s ease;
+}
+
+/* Channel list */
+.channelList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.channelItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  background: var(--bg);
+  border-radius: var(--radius-md);
+  transition: background 0.1s;
+}
+
+.channelItem:hover {
+  background: var(--surface-hover);
+}
+
+.channelInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.channelAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--tg-blue);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.channelName {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.channelMeta {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.removeBtn {
+  padding: 6px 14px;
+  background: none;
+  color: var(--tg-red);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+
+.removeBtn:hover {
+  background: #FFF0F0;
+  border-color: #FFD4D4;
+}
+
+.signOutBtn {
+  padding: 10px 20px;
+  background: none;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.15s;
+  align-self: flex-start;
+}
+
+.signOutBtn:hover {
+  color: var(--tg-red);
+  border-color: var(--tg-red);
+  background: #FFF0F0;
+}
