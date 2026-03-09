@@ -1,62 +1,76 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap');
 
 :root {
-  /* Telegram-inspired palette — light */
+  /* Telegram-DNA palette */
   --tg-blue: #229ED9;
-  --tg-blue-hover: #1A8BC4;
-  --tg-blue-light: #E8F4FD;
-  --tg-blue-pale: #F0F8FF;
+  --tg-blue-hover: #1B8EC5;
+  --tg-blue-light: #E3F2FD;
+  --tg-blue-pale: #F5FAFF;
+  --tg-blue-glow: rgba(34, 158, 217, 0.12);
   
-  --tg-green: #4FAE4E;
-  --tg-green-light: #EEFFDE;
-  --tg-green-pale: #F4FFF0;
+  --tg-green: #4CAF50;
+  --tg-green-light: #E8F5E9;
+  --tg-green-bubble: #EEFFDE;
   
   --tg-red: #E53935;
-  --tg-orange: #F5A623;
-  --tg-purple: #7B68EE;
+  --tg-red-light: #FFEBEE;
+  --tg-orange: #FF9800;
+  --tg-purple: #7C4DFF;
   
-  /* Surfaces */
-  --bg: #F0F2F5;
-  --bg-chat: #FFFFFF;
+  /* Surfaces — warm neutrals, not cold gray */
+  --bg: #F4F5F7;
+  --bg-subtle: #FAFBFC;
   --surface: #FFFFFF;
-  --surface-hover: #F7F8FA;
-  --surface-active: #EDF0F3;
+  --surface-hover: #F8F9FA;
+  --surface-active: #F0F1F3;
+  --surface-elevated: #FFFFFF;
   
   /* Borders */
-  --border: #E3E5E8;
-  --border-light: #EDEEF0;
+  --border: #E2E4E9;
+  --border-light: #ECEEF2;
+  --border-focus: var(--tg-blue);
   
-  /* Text */
-  --text: #1A1A1A;
-  --text-secondary: #707579;
-  --text-muted: #A0A4A8;
-  --text-link: #229ED9;
+  /* Text — high contrast hierarchy */
+  --text: #0F172A;
+  --text-secondary: #64748B;
+  --text-muted: #94A3B8;
+  --text-link: var(--tg-blue);
   
-  /* Bubble colors */
+  /* Chat bubbles */
   --bubble-out: #EEFFDE;
   --bubble-out-border: #D4EFC8;
   --bubble-in: #FFFFFF;
-  --bubble-in-border: #E3E5E8;
   
-  /* Spacing & Radius */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
-  --radius-bubble: 18px;
+  /* Radius — slightly tighter = more professional */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-bubble: 16px;
+  --radius-full: 9999px;
   
-  /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.1);
-  --shadow-float: 0 8px 32px rgba(0, 0, 0, 0.12);
+  /* Shadows — subtle, layered */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+  --shadow-float: 0 12px 40px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-blue: 0 4px 14px rgba(34, 158, 217, 0.2);
   
   /* Layout */
-  --sidebar-width: 280px;
+  --sidebar-width: 260px;
   
-  /* Font */
-  --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  /* Fonts — Geist for native-app feel */
+  --font: 'Geist', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono: 'Geist Mono', 'SF Mono', 'Fira Code', monospace;
+  
+  /* Transitions */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
+  --duration-fast: 120ms;
+  --duration-normal: 200ms;
+  --duration-slow: 320ms;
 }
 
 * {
@@ -76,15 +90,18 @@ body {
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Subtle grain texture for depth */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
 }
 
 a {
   color: var(--text-link);
   text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
 }
 
 a:hover {
-  text-decoration: underline;
+  color: var(--tg-blue-hover);
 }
 
 button {
@@ -104,9 +121,9 @@ input, textarea, select {
   color: var(--tg-blue);
 }
 
-/* Scrollbar — thin, TG-like */
+/* Scrollbar — hairline */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -122,23 +139,38 @@ input, textarea, select {
   background: var(--text-muted);
 }
 
+/* Focus ring — accessible, branded */
+:focus-visible {
+  outline: 2px solid var(--tg-blue);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes slideIn {
-  from { opacity: 0; transform: translateX(-12px); }
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-8px); }
   to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.95); }
+  from { opacity: 0; transform: scale(0.97); }
   to { opacity: 1; transform: scale(1); }
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
