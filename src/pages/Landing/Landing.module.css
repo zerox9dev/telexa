@@ -1,112 +1,279 @@
 .page {
   min-height: 100vh;
-  background: var(--color-bg);
+  background: var(--bg);
 }
 
-.header {
+/* Top bar */
+.topBar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(248, 249, 250, 0.9);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--color-border);
   z-index: 100;
+  background: rgba(240, 242, 245, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-light);
 }
 
-.headerInner {
-  max-width: 1100px;
+.topInner {
+  max-width: 1060px;
   margin: 0 auto;
-  padding: 16px 24px;
+  padding: 14px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .logo {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.03em;
 }
 
 .loginBtn {
   padding: 8px 20px;
-  background: var(--color-surface);
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.15s ease;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.15s;
 }
 
 .loginBtn:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+  border-color: var(--tg-blue);
+  color: var(--tg-blue);
 }
 
 /* Hero */
 .hero {
-  max-width: 700px;
+  max-width: 1060px;
   margin: 0 auto;
-  padding: 140px 24px 80px;
+  padding: 120px 24px 60px;
   text-align: center;
 }
 
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: var(--tg-blue-light);
+  color: var(--tg-blue);
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  animation: fadeIn 0.5s ease;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  background: var(--tg-blue);
+  border-radius: 50%;
+  animation: pulse 2s ease infinite;
+}
+
 .heroTitle {
-  font-size: 48px;
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  color: var(--color-text);
+  font-size: 52px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  animation: fadeIn 0.5s ease 0.1s both;
 }
 
 .heroDesc {
   font-size: 18px;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
   line-height: 1.6;
-  margin-top: 20px;
+  margin-top: 16px;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+  animation: fadeIn 0.5s ease 0.2s both;
 }
 
-.cta {
+.heroCta {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
   margin-top: 32px;
-  padding: 14px 36px;
-  background: var(--color-primary);
-  color: white;
-  border: none;
-  border-radius: var(--radius-md);
-  font-size: 16px;
-  font-weight: 600;
-  transition: background 0.15s ease;
+  animation: fadeIn 0.5s ease 0.3s both;
 }
 
-.cta:hover {
-  background: var(--color-primary-hover);
+.primaryBtn {
+  padding: 13px 32px;
+  background: var(--tg-blue);
+  color: white;
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 700;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px rgba(34, 158, 217, 0.3);
+}
+
+.primaryBtn:hover {
+  background: var(--tg-blue-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(34, 158, 217, 0.4);
+}
+
+.secondaryBtn {
+  padding: 13px 24px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+
+.secondaryBtn:hover {
+  border-color: var(--text-muted);
+  color: var(--text);
+}
+
+/* Hero preview — TG chat mockup */
+.heroPreview {
+  margin-top: 48px;
+  display: flex;
+  justify-content: center;
+  animation: fadeIn 0.6s ease 0.4s both;
+}
+
+.chatWindow {
+  width: 400px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-float);
+}
+
+.chatHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--tg-blue);
+}
+
+.chatAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.chatName {
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+}
+
+.chatSubs {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.chatBody {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--bg);
+  background-image: radial-gradient(circle at 30% 40%, rgba(34, 158, 217, 0.04) 0%, transparent 50%);
+}
+
+.bubble {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: 18px 18px 18px 4px;
+  padding: 10px 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+  max-width: 320px;
+}
+
+.bubbleMeta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: flex-end;
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.bubbleScheduled {
+  background: var(--surface);
+  border: 1px dashed var(--tg-blue);
+  border-radius: 18px 18px 18px 4px;
+  padding: 10px 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  max-width: 320px;
+  opacity: 0.8;
+}
+
+.scheduledBadge {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--tg-blue);
+  margin-bottom: 4px;
 }
 
 /* Features */
 .features {
-  max-width: 1100px;
+  max-width: 1060px;
   margin: 0 auto;
-  padding: 0 24px 80px;
+  padding: 60px 24px;
+}
+
+.sectionTitle {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-align: center;
+  margin-bottom: 40px;
 }
 
 .featuresGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 16px;
 }
 
-.featureCard {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+.feature {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
   border-radius: var(--radius-lg);
-  padding: 28px;
-  transition: border-color 0.15s ease;
+  padding: 24px;
+  animation: fadeIn 0.4s ease both;
+  transition: all 0.2s;
 }
 
-.featureCard:hover {
-  border-color: var(--color-primary-light);
+.feature:hover {
+  border-color: var(--tg-blue-light);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
 }
 
 .featureIcon {
@@ -115,15 +282,15 @@
   margin-bottom: 12px;
 }
 
-.featureTitle {
-  font-size: 16px;
-  font-weight: 600;
+.featureName {
+  font-size: 15px;
+  font-weight: 700;
   margin-bottom: 6px;
 }
 
 .featureDesc {
-  font-size: 14px;
-  color: var(--color-text-secondary);
+  font-size: 13px;
+  color: var(--text-secondary);
   line-height: 1.5;
 }
 
@@ -131,107 +298,157 @@
 .pricing {
   max-width: 900px;
   margin: 0 auto;
-  padding: 0 24px 80px;
+  padding: 40px 24px 80px;
   text-align: center;
 }
 
-.sectionTitle {
-  font-size: 32px;
-  font-weight: 700;
+.pricingDesc {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-top: -28px;
   margin-bottom: 40px;
 }
 
-.pricingGrid {
+.plans {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-.priceCard {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: 32px 24px;
+  gap: 16px;
   text-align: left;
+}
+
+.plan {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   position: relative;
+  transition: all 0.2s;
 }
 
-.popular {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 1px var(--color-primary);
+.plan:hover {
+  box-shadow: var(--shadow-md);
 }
 
-.popularBadge {
+.planPro {
+  border-color: var(--tg-blue);
+  box-shadow: 0 0 0 1px var(--tg-blue), var(--shadow-md);
+}
+
+.proBadge {
   position: absolute;
-  top: -12px;
+  top: -11px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--color-primary);
+  background: var(--tg-blue);
   color: white;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.04em;
   padding: 4px 14px;
   border-radius: 20px;
 }
 
 .planName {
   font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 8px;
+  font-weight: 700;
 }
 
 .planPrice {
-  font-size: 40px;
-  font-weight: 700;
-  margin-bottom: 20px;
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
 }
 
 .planPrice span {
-  font-size: 16px;
-  font-weight: 400;
-  color: var(--color-text-secondary);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-secondary);
 }
 
-.planFeatures {
+.planList {
   list-style: none;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  flex: 1;
 }
 
-.planFeatures li {
+.planList li {
   font-size: 14px;
-  color: var(--color-text-secondary);
-  padding-left: 20px;
+  color: var(--text-secondary);
+  padding-left: 22px;
   position: relative;
 }
 
-.planFeatures li::before {
+.planList li::before {
   content: '✓';
   position: absolute;
   left: 0;
-  color: var(--color-success);
+  color: var(--tg-green);
+  font-weight: 700;
+}
+
+.planBtn {
+  padding: 10px 20px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
   font-weight: 600;
+  transition: all 0.15s;
+}
+
+.planBtn:hover {
+  border-color: var(--tg-blue);
+  color: var(--tg-blue);
+}
+
+.planBtnPro {
+  padding: 10px 20px;
+  background: var(--tg-blue);
+  color: white;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(34, 158, 217, 0.2);
+}
+
+.planBtnPro:hover {
+  background: var(--tg-blue-hover);
+  transform: translateY(-1px);
 }
 
 /* Footer */
 .footer {
   text-align: center;
-  padding: 32px 24px;
-  color: var(--color-text-muted);
+  padding: 24px;
   font-size: 13px;
-  border-top: 1px solid var(--color-border);
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-light);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .heroTitle {
-    font-size: 32px;
+    font-size: 34px;
+  }
+
+  .heroCta {
+    flex-direction: column;
+    align-items: center;
   }
 
   .featuresGrid,
-  .pricingGrid {
+  .plans {
     grid-template-columns: 1fr;
+  }
+
+  .chatWindow {
+    width: 100%;
   }
 }
