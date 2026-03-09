@@ -1,0 +1,87 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.navBtn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.navBtn:hover {
+  border-color: var(--color-border-hover);
+  background: var(--color-bg);
+}
+
+.month {
+  font-size: 16px;
+  font-weight: 600;
+  min-width: 140px;
+  text-align: center;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.dayHeader {
+  padding: 12px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.cell {
+  min-height: 100px;
+  padding: 8px;
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.cell:nth-child(7n) {
+  border-right: none;
+}
+
+.otherMonth {
+  background: var(--color-bg);
+}
+
+.dayNum {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
