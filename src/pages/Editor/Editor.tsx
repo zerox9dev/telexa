@@ -7,13 +7,15 @@ import styles from './Editor.module.css'
 export function Editor() {
   const navigate = useNavigate()
   const { channels } = useChannels()
-  const { createPost } = usePosts()
+  const { createPost, sendNow } = usePosts()
 
   const [channelId, setChannelId] = useState('')
   const [text, setText] = useState('')
   const [scheduledAt, setScheduledAt] = useState('')
   const [saving, setSaving] = useState(false)
+  const [sending, setSending] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
 
   const now = new Date()
   const timeStr = scheduledAt
@@ -27,6 +29,7 @@ export function Editor() {
 
     setSaving(true)
     setError('')
+    setSuccess('')
     try {
       await createPost({
         channel_id: channelId || channels[0]?.id || '',
@@ -42,6 +45,30 @@ export function Editor() {
     }
   }
 
+  const handleSendNow = async () => {
+    if (!text.trim()) return setError('Write something first')
+    if (!channelId) return setError('Select a channel')
+
+    setSending(true)
+    setError('')
+    setSuccess('')
+    try {
+      // Create + send immediately
+      const post = await createPost({
+        channel_id: channelId,
+        text: text.trim(),
+        status: 'scheduled',
+      })
+      await sendNow(post.id)
+      setSuccess('Published to Telegram ✓')
+      setTimeout(() => navigate('/dashboard'), 1500)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to send')
+    } finally {
+      setSending(false)
+    }
+  }
+
   return (
     <div className={styles.page}>
       <header className={styles.header}>
@@ -53,24 +80,36 @@ export function Editor() {
           <button
             className={styles.draftBtn}
             onClick={() => handleSave('draft')}
-            disabled={saving}
+            disabled={saving || sending}
           >
             Save Draft
           </button>
           <button
             className={styles.scheduleBtn}
             onClick={() => handleSave('scheduled')}
-            disabled={saving}
+            disabled={saving || sending}
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M2 3L14 8L2 13V9L10 8L2 7V3Z" fill="currentColor" />
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.5" />
+              <path d="M8 4.5V8L10.5 9.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
             {saving ? 'Saving...' : 'Schedule'}
+          </button>
+          <button
+            className={styles.sendBtn}
+            onClick={handleSendNow}
+            disabled={saving || sending}
+          >
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+              <path d="M2 3L14 8L2 13V9L10 8L2 7V3Z" fill="currentColor" />
+            </svg>
+            {sending ? 'Sending...' : 'Send Now'}
           </button>
         </div>
       </header>
 
       {error && <div className={styles.error}>{error}</div>}
+      {success && <div className={styles.success}>{success}</div>}
 
       <div className={styles.workspace}>
         {/* Left: Editor */}

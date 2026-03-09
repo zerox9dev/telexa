@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { Post, PostStatus } from '../lib/database.types'
+import { publishPost } from '../lib/postingEngine'
 
 const STORAGE_KEY = 'telexa_posts'
 
@@ -87,19 +88,33 @@ export function usePosts(channelId?: string) {
     setPosts(prev => prev.filter(p => p.id !== postId))
   }
 
+  /** Send a post to Telegram immediately */
+  const sendNow = async (postId: string) => {
+    const all = loadPosts()
+    const post = all.find(p => p.id === postId)
+    if (!post) throw new Error('Post not found')
+
+    const updated = await publishPost(post)
+    setPosts(prev => prev.map(p => p.id === postId ? updated : p))
+    return updated
+  }
+
   const scheduled = posts.filter(p => p.status === 'scheduled')
   const drafts = posts.filter(p => p.status === 'draft')
   const published = posts.filter(p => p.status === 'published')
+  const failed = posts.filter(p => p.status === 'failed')
 
   return {
     posts,
     scheduled,
     drafts,
     published,
+    failed,
     loading,
     createPost,
     updatePost,
     deletePost,
+    sendNow,
     refetch: fetchPosts,
   }
 }

@@ -6,11 +6,18 @@ import { Dashboard } from './pages/Dashboard/Dashboard'
 import { Calendar } from './pages/Calendar/Calendar'
 import { Editor } from './pages/Editor/Editor'
 import { Settings } from './pages/Settings/Settings'
+import { useScheduler } from './hooks/useScheduler'
+
+function SchedulerRunner() {
+  useScheduler()
+  return null
+}
 
 export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <SchedulerRunner />
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route element={<AppLayout />}>
