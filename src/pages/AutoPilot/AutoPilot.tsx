@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useChannels } from '../../hooks/useChannels'
 import { usePosts } from '../../hooks/usePosts'
 import { supabase, isSupabaseConfigured } from '../../lib/supabase'
-import { generateAutoPilotDrafts } from '../../lib/ai'
-import { FaRobot, FaSave, FaMagic, FaPlus, FaTimes } from 'react-icons/fa'
+import { generateAutoPilotDrafts, analyzeChannel } from '../../lib/ai'
+import { FaRobot, FaSave, FaMagic, FaPlus, FaTimes, FaSearch } from 'react-icons/fa'
 import styles from './AutoPilot.module.css'
 
 interface AgentProfile {
@@ -46,6 +46,7 @@ export function AutoPilot() {
   const [customTopic, setCustomTopic] = useState('')
   const [newTopic, setNewTopic] = useState('')
   const [newExample, setNewExample] = useState('')
+  const [analyzing, setAnalyzing] = useState(false)
 
   useEffect(() => {
     if (!channelId && channels.length > 0) {
@@ -152,6 +153,33 @@ export function AutoPilot() {
     }
   }
 
+  const handleAnalyze = async () => {
+    const channel = channels.find(c => c.id === channelId)
+    const username = channel?.username
+    if (!username) return setError('У каналу немає публічного юзернейму')
+    
+    setAnalyzing(true)
+    setError('')
+    try {
+      const { profile, postCount } = await analyzeChannel(username)
+      setAgent(prev => prev ? {
+        ...prev,
+        description: profile.description || prev.description,
+        audience: profile.audience || prev.audience,
+        tone: profile.tone || prev.tone,
+        topics: profile.topics?.length ? profile.topics : prev.topics,
+        language: profile.language || prev.language,
+        rules: profile.rules || prev.rules,
+        example_posts: profile.example_posts?.length ? profile.example_posts : prev.example_posts,
+      } : prev)
+      setSuccess(`Проаналізовано ${postCount} постів з @${username}! Перевірте та збережіть.`)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Не вдалося проаналізувати')
+    } finally {
+      setAnalyzing(false)
+    }
+  }
+
   const addTopic = () => {
     if (!newTopic.trim() || !agent) return
     setAgent({ ...agent, topics: [...agent.topics, newTopic.trim()] })
@@ -219,6 +247,20 @@ export function AutoPilot() {
       {/* Setup Tab */}
       {tab === 'setup' && agent && (
         <div className={styles.card}>
+          <div className={styles.analyzeBar}>
+            <p className={styles.analyzeHint}>
+              Є пости в каналі? AI проаналізує стиль, тон, рубрики і заповнить профіль автоматично.
+            </p>
+            <button
+              className={styles.analyzeBtn}
+              onClick={handleAnalyze}
+              disabled={analyzing}
+            >
+              <FaSearch size={14} />
+              {analyzing ? 'Аналізую...' : 'Проаналізувати канал'}
+            </button>
+          </div>
+
           <div className={styles.form}>
             <div className={styles.field}>
               <label className={styles.label}>Про що канал?</label>

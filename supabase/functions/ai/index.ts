@@ -131,6 +131,67 @@ Follow Telegram style: line breaks, few emojis, no corporate speak.`
       })
     }
 
+    // === Analyze channel ===
+    if (action === 'analyze') {
+      const username = (body.username || '').replace('@', '').trim()
+      if (!username) throw new Error('Введіть юзернейм каналу')
+
+      // Fetch public channel page
+      const pageRes = await fetch(`https://t.me/s/${username}`, {
+        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; TelexaBot/1.0)' }
+      })
+      if (!pageRes.ok) throw new Error('Не вдалося завантажити канал. Переконайтесь що канал публічний.')
+      const html = await pageRes.text()
+
+      // Parse post texts from HTML
+      const postRegex = /<div class="tgme_widget_message_text[^"]*"[^>]*>([\s\S]*?)<\/div>/g
+      const rawPosts: string[] = []
+      let match
+      while ((match = postRegex.exec(html)) !== null && rawPosts.length < 20) {
+        const text = match[1]
+          .replace(/<br\s*\/?>/g, '\n')
+          .replace(/<[^>]+>/g, '')
+          .replace(/&amp;/g, '&')
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>')
+          .replace(/&quot;/g, '"')
+          .replace(/&#39;/g, "'")
+          .trim()
+        if (text.length > 30) rawPosts.push(text)
+      }
+
+      if (rawPosts.length === 0) throw new Error('Не знайдено постів. Можливо канал приватний або порожній.')
+
+      // Ask AI to analyze
+      const analyzePrompt = `Analyze these ${rawPosts.length} Telegram channel posts and extract a profile.
+
+Posts:
+${rawPosts.slice(0, 15).map((p, i) => `--- Post ${i + 1} ---\n${p}`).join('\n\n')}
+
+Return ONLY a JSON object with these fields:
+{
+  "description": "One paragraph describing what this channel is about",
+  "audience": "Who is the target audience",
+  "tone": "Describe the tone of voice and writing style in detail",
+  "topics": ["topic1", "topic2", ...],
+  "language": "Ukrainian" or "English" or "Russian",
+  "rules": "What patterns to avoid based on the existing style",
+  "example_posts": [pick the 3 best/most representative posts verbatim]
+}
+
+Be specific and detailed. Analyze actual writing patterns, not generic descriptions.`
+
+      let result = await callOpenAI(OPENAI_KEY, analyzePrompt)
+      result = result.replace(/^```json\s*/m, '').replace(/```\s*$/m, '').trim()
+      result = result.replace(/,\s*}/g, '}').replace(/,\s*]/g, ']')
+
+      const profile = JSON.parse(result)
+
+      return new Response(JSON.stringify({ ok: true, profile, postCount: rawPosts.length }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+
     throw new Error(`Unknown action: ${action}`)
   } catch (err) {
     return new Response(JSON.stringify({ ok: false, error: (err as Error).message }), {

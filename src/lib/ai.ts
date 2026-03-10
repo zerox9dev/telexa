@@ -56,3 +56,18 @@ export async function generateAutoPilotDrafts(options: AutoPilotOptions): Promis
   const data = await callAiFunction({ action: 'autopilot', ...options })
   return data.posts
 }
+
+export interface ChannelAnalysis {
+  description: string
+  audience: string
+  tone: string
+  topics: string[]
+  language: string
+  rules: string
+  example_posts: string[]
+}
+
+export async function analyzeChannel(username: string): Promise<{ profile: ChannelAnalysis; postCount: number }> {
+  const data = await callAiFunction({ action: 'analyze', username })
+  return { profile: data.profile, postCount: data.postCount }
+}
