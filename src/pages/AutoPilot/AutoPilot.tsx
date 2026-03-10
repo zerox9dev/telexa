@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useChannels } from '../../hooks/useChannels'
 import { usePosts } from '../../hooks/usePosts'
@@ -9,7 +9,13 @@ export function AutoPilot() {
   const navigate = useNavigate()
   const { channels } = useChannels()
   const { createPost } = usePosts()
-  const [channelId, setChannelId] = useState(channels[0]?.id || '')
+  const [channelId, setChannelId] = useState('')
+
+  useEffect(() => {
+    if (!channelId && channels.length > 0) {
+      setChannelId(channels[0].id)
+    }
+  }, [channels, channelId])
   const [channelDesc, setChannelDesc] = useState('Канал про веб-розробку, дизайн та AI-інструменти')
   const [tone, setTone] = useState('Професійний але невимушений, без корпоративного жаргону, прямий і лаконічний')
   const [topic, setTopic] = useState('Нові фічі React 19 та як їх використовувати')
