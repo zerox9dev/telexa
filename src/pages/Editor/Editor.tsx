@@ -240,43 +240,40 @@ export function Editor() {
 
         {/* Right: TG Preview */}
         <div className={styles.previewPanel}>
-          <div className={styles.previewHeader}>
-            <span className={styles.previewLabel}>Прев'ю</span>
-            <span className={styles.previewChannel}>
-              {selectedChannel?.title || 'Назва каналу'}
-            </span>
-          </div>
-          <div className={styles.previewChat}>
-            <div className={styles.chatBg}>
-              {(text || mediaUrl) ? (
-                <div className={styles.message}>
-                  <div className={`${styles.messageBody} ${mediaUrl ? styles.messageBodyWithPhoto : ''}`}>
-                    {mediaUrl && <img src={mediaUrl} className={styles.messagePhoto} alt="TG Preview" />}
-                    {text && <p className={`${styles.messageText} ${mediaUrl ? styles.messageTextWithPhoto : ''}`}>{text}</p>}
-                    <div className={`${styles.messageMeta} ${mediaUrl && !text ? styles.messageMetaFloat : ''}`}>
-                      <span className={styles.messageTime}>
-                        {timeStr}
-                        <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
-                          <path d="M1 5L4 8L10 2" stroke="#4FAE4E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                          <path d="M6 5L9 8L15 2" stroke="#4FAE4E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      </span>
-                    </div>
-                  </div>
-                  <div className={styles.messageViews}>
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                      <path d="M7 3C4 3 1.5 7 1.5 7C1.5 7 4 11 7 11C10 11 12.5 7 12.5 7C12.5 7 10 3 7 3Z" stroke="currentColor" strokeWidth="1.2" />
-                      <circle cx="7" cy="7" r="2" stroke="currentColor" strokeWidth="1.2" />
-                    </svg>
-                    0
-                  </div>
-                </div>
-              ) : (
-                <div className={styles.previewEmpty}>
-                  Почніть писати, щоб побачити прев'ю
-                </div>
-              )}
+          <div className={styles.tgHeader}>
+            <button className={styles.tgBack}>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M12 4L6 10L12 16" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            <div className={styles.tgHeaderInfo}>
+              <div className={styles.tgAvatar}>
+                {(selectedChannel?.title || 'T').charAt(0)}
+              </div>
+              <div>
+                <div className={styles.tgChannelName}>{selectedChannel?.title || 'Назва каналу'}</div>
+                <div className={styles.tgSubs}>{selectedChannel?.member_count?.toLocaleString() || '0'} підписників</div>
+              </div>
             </div>
+          </div>
+          <div className={styles.tgChat}>
+            {(text || mediaUrl) ? (
+              <div className={styles.tgMessage}>
+                {mediaUrl && (
+                  <img src={mediaUrl} className={styles.tgPhoto} alt="" />
+                )}
+                {text && (
+                  <div className={styles.tgText}>{text}</div>
+                )}
+                <div className={styles.tgFooter}>
+                  <span className={styles.tgTime}>{timeStr}</span>
+                </div>
+              </div>
+            ) : (
+              <div className={styles.previewEmpty}>
+                Почніть писати, щоб побачити прев'ю
+              </div>
+            )}
           </div>
         </div>
       </div>
