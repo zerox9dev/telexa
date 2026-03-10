@@ -301,6 +301,35 @@
 }
 
 /* Mobile */
+.postActions {
+  display: flex;
+  gap: 6px;
+}
+
+.actionBtn {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.actionBtn:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.actionBtnDanger:hover {
+  background: var(--alert-light);
+  color: var(--alert);
+}
+
 @media (max-width: 768px) {
   .stats {
     grid-template-columns: 1fr 1fr;

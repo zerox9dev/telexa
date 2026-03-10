@@ -11,7 +11,7 @@ export function Editor() {
   const navigate = useNavigate()
   const { id: editId } = useParams<{ id: string }>()
   const { channels } = useChannels()
-  const { posts, createPost, updatePost, sendNow } = usePosts()
+  const { posts, createPost, updatePost, deletePost, sendNow } = usePosts()
 
   const [channelId, setChannelId] = useState('')
   const [text, setText] = useState('')
@@ -164,6 +164,15 @@ export function Editor() {
           <p className={styles.subtitle}>Створіть та заплануйте</p>
         </div>
         <div className={styles.actions}>
+          {editId && (
+            <button className={styles.deleteBtn} onClick={async () => {
+              if (!confirm('Видалити цей пост?')) return
+              await deletePost(editId)
+              navigate('/dashboard')
+            }}>
+              <FaTrash size={13} /> Видалити
+            </button>
+          )}
           <button
             className={styles.aiBtn}
             onClick={() => setShowAi(v => !v)}

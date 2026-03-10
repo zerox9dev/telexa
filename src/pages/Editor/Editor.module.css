@@ -489,3 +489,22 @@ div.tgAvatar {
   background: var(--surface-hover);
   color: var(--text);
 }
+
+.deleteBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: none;
+  border: 1px solid var(--alert);
+  border-radius: var(--radius-sm);
+  color: var(--alert);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.deleteBtn:hover {
+  background: var(--alert-light);
+}

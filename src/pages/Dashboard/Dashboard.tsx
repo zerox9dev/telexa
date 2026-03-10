@@ -2,12 +2,13 @@ import { useNavigate } from 'react-router-dom'
 import { useChannels } from '../../hooks/useChannels'
 import { usePosts } from '../../hooks/usePosts'
 import { ActivityHeatmap } from '../../components/ActivityHeatmap/ActivityHeatmap'
+import { FaEdit, FaTrash, FaPaperPlane } from 'react-icons/fa'
 import styles from './Dashboard.module.css'
 
 export function Dashboard() {
   const navigate = useNavigate()
   const { channels } = useChannels()
-  const { posts, drafts, scheduled, published } = usePosts()
+  const { posts, drafts, scheduled, published, deletePost, sendNow, refetch } = usePosts()
 
 
   const STATS = [
@@ -59,7 +60,6 @@ export function Dashboard() {
               <div
                 key={post.id}
                 className={styles.postItem}
-                onClick={() => navigate(`/editor/${post.id}`)}
               >
                 <div className={styles.postContentWrap}>
                   <div className={styles.postPreview}>
@@ -68,6 +68,17 @@ export function Dashboard() {
                 </div>
                 <div className={styles.postMeta}>
                   <span className={styles.postStatus}>📝 Чернетка</span>
+                  <div className={styles.postActions}>
+                    <button className={styles.actionBtn} title="Редагувати" onClick={() => navigate(`/editor/${post.id}`)}>
+                      <FaEdit size={14} />
+                    </button>
+                    <button className={`${styles.actionBtn} ${styles.actionBtnDanger}`} title="Видалити" onClick={async () => {
+                      if (!confirm('Видалити цей пост?')) return
+                      await deletePost(post.id)
+                    }}>
+                      <FaTrash size={13} />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -98,7 +109,6 @@ export function Dashboard() {
               <div
                 key={post.id}
                 className={styles.postItem}
-                onClick={() => navigate(`/editor/${post.id}`)}
               >
                 <div className={styles.postContentWrap}>
                   {post.media_url && (
@@ -119,6 +129,23 @@ export function Dashboard() {
                         })
                       : '—'}
                   </span>
+                  <div className={styles.postActions}>
+                    <button className={styles.actionBtn} title="Редагувати" onClick={() => navigate(`/editor/${post.id}`)}>
+                      <FaEdit size={14} />
+                    </button>
+                    <button className={styles.actionBtn} title="Надіслати зараз" onClick={async () => {
+                      await sendNow(post.id)
+                      await refetch()
+                    }}>
+                      <FaPaperPlane size={13} />
+                    </button>
+                    <button className={`${styles.actionBtn} ${styles.actionBtnDanger}`} title="Видалити" onClick={async () => {
+                      if (!confirm('Видалити цей пост?')) return
+                      await deletePost(post.id)
+                    }}>
+                      <FaTrash size={13} />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -163,6 +190,14 @@ export function Dashboard() {
                         })
                       : '—'}
                   </span>
+                  <div className={styles.postActions}>
+                    <button className={`${styles.actionBtn} ${styles.actionBtnDanger}`} title="Видалити" onClick={async () => {
+                      if (!confirm('Видалити цей пост?')) return
+                      await deletePost(post.id)
+                    }}>
+                      <FaTrash size={13} />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
