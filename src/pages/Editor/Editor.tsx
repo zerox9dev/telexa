@@ -4,7 +4,7 @@ import { useChannels } from '../../hooks/useChannels'
 import { usePosts } from '../../hooks/usePosts'
 import { AiPanel } from '../../components/AiPanel/AiPanel'
 import { uploadMedia } from '../../lib/storage'
-import { FaBold, FaItalic, FaCode, FaStrikethrough, FaLink, FaPaperclip, FaMagic, FaPaperPlane, FaSave, FaClock, FaChevronLeft } from 'react-icons/fa'
+import { FaBold, FaItalic, FaCode, FaStrikethrough, FaLink, FaPaperclip, FaMagic, FaPaperPlane, FaSave, FaClock, FaChevronLeft, FaTrash } from 'react-icons/fa'
 import styles from './Editor.module.css'
 
 export function Editor() {
