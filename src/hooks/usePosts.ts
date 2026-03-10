@@ -32,7 +32,7 @@ export function usePosts(channelId?: string) {
       return
     }
 
-    let q = supabase.from('posts').select('*').order('scheduled_at', { ascending: true, nullsFirst: false }).order('created_at', { ascending: false })
+    let q = (supabase as any).from('posts').select('*').order('scheduled_at', { ascending: true, nullsFirst: false }).order('created_at', { ascending: false })
     if (channelId) q = q.eq('channel_id', channelId)
 
     const { data, error } = await q
@@ -72,7 +72,7 @@ export function usePosts(channelId?: string) {
     const { data: user } = await supabase.auth.getUser()
     if (!user.user) throw new Error('Not logged in')
 
-    const { data, error } = await supabase.from('posts').insert({
+    const { data, error } = await (supabase as any).from('posts').insert({
       user_id: user.user.id,
       channel_id: input.channel_id,
       text: input.text,
@@ -98,7 +98,7 @@ export function usePosts(channelId?: string) {
       return all[idx]
     }
 
-    const { data, error } = await supabase.from('posts').update({
+    const { data, error } = await (supabase as any).from('posts').update({
       ...updates,
       updated_at: new Date().toISOString(),
     }).eq('id', postId).select().single()
@@ -117,7 +117,7 @@ export function usePosts(channelId?: string) {
       return
     }
 
-    const { error } = await supabase.from('posts').delete().eq('id', postId)
+    const { error } = await (supabase as any).from('posts').delete().eq('id', postId)
     if (error) throw new Error(error.message)
     setPosts(prev => prev.filter(p => p.id !== postId))
   }
@@ -138,7 +138,7 @@ export function usePosts(channelId?: string) {
     
     const updated = await publishPost(post)
     
-    const { data, error } = await supabase.from('posts').update({
+    const { data, error } = await (supabase as any).from('posts').update({
       status: updated.status,
       published_at: updated.published_at,
       error: updated.error,

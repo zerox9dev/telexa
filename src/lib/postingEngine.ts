@@ -20,7 +20,7 @@ export async function publishPost(post: Post): Promise<Post> {
   if (!isSupabaseConfigured) {
     channel = loadChannels().find(c => c.id === post.channel_id)
   } else {
-    const { data } = await supabase.from('channels').select('*').eq('id', post.channel_id).single()
+    const { data } = await (supabase as any).from('channels').select('*').eq('id', post.channel_id).single()
     channel = data || undefined
   }
 
@@ -51,7 +51,7 @@ export async function publishPost(post: Post): Promise<Post> {
         savePosts(all)
       }
     } else {
-      await supabase.from('posts').update({
+      await (supabase as any).from('posts').update({
         status: updated.status,
         published_at: updated.published_at,
         error: null,
@@ -77,7 +77,7 @@ export async function publishPost(post: Post): Promise<Post> {
         savePosts(all)
       }
     } else {
-      await supabase.from('posts').update({
+      await (supabase as any).from('posts').update({
         status: failed.status,
         error: failed.error,
         updated_at: failed.updated_at

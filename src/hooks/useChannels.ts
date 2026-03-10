@@ -63,7 +63,7 @@ export function useChannels() {
     const { data: user } = await supabase.auth.getUser()
     if (!user.user) throw new Error('Not logged in')
 
-    const { data, error } = await supabase.from('channels').insert({
+    const { data, error } = await (supabase as any).from('channels').insert({
       user_id: user.user.id,
       bot_token: botToken,
       chat_id: String(chat.id),
@@ -85,7 +85,7 @@ export function useChannels() {
       return
     }
 
-    const { error } = await supabase.from('channels').delete().eq('id', channelId)
+    const { error } = await (supabase as any).from('channels').delete().eq('id', channelId)
     if (error) throw new Error(error.message)
     setChannels(prev => prev.filter(c => c.id !== channelId))
   }
