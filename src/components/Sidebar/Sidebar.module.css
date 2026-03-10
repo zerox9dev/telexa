@@ -254,7 +254,7 @@
 
 .usageFill {
   height: 100%;
-  background: linear-gradient(90deg, var(--tg-blue), #5BC0F8);
+  background: var(--brand);
   border-radius: 2px;
   transition: width var(--duration-slow) var(--ease-out);
 }

@@ -48,7 +48,7 @@
 }
 
 .aiBtn[data-active] {
-  background: linear-gradient(135deg, #E3F2FD, #EDE7F6);
+  background: var(--brand-light);
   border-color: var(--tg-blue);
   color: var(--tg-blue);
 }
@@ -337,8 +337,6 @@
 .chatBg {
   padding: 16px;
   min-height: 200px;
-  background-image: radial-gradient(circle at 20% 50%, rgba(34, 158, 217, 0.03) 0%, transparent 50%),
-                     radial-gradient(circle at 80% 20%, rgba(34, 158, 217, 0.03) 0%, transparent 50%);
 }
 
 .message {

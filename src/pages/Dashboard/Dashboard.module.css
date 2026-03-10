@@ -273,7 +273,7 @@
 
 /* Onboarding */
 .onboarding {
-  background: linear-gradient(135deg, var(--tg-blue-pale) 0%, var(--tg-blue-light) 100%);
+  background: var(--brand-light);
   border: 1px solid var(--tg-blue-light);
   border-radius: var(--radius-lg);
   padding: 24px;

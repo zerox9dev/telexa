@@ -196,7 +196,6 @@
   flex-direction: column;
   gap: 10px;
   background: var(--bg);
-  background-image: radial-gradient(circle at 30% 40%, rgba(34, 158, 217, 0.04) 0%, transparent 50%);
 }
 
 .bubble {
