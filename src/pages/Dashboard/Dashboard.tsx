@@ -9,13 +9,11 @@ export function Dashboard() {
   const { channels } = useChannels()
   const { posts, scheduled, published } = usePosts()
 
-  const totalViews = published.reduce((sum, p) => sum + (p.views || 0), 0)
 
   const STATS = [
     { label: 'Заплановані', value: String(scheduled.length), icon: '⏳', color: 'blue' },
     { label: 'Опубліковані', value: String(published.length), icon: '✓', color: 'green' },
     { label: 'Канали', value: String(channels.length), icon: '📢', color: 'purple' },
-    { label: 'Перегляди', value: totalViews.toLocaleString(), icon: '👁', color: 'orange' },
   ]
 
   return (
@@ -130,9 +128,6 @@ export function Dashboard() {
                   </div>
                 </div>
                 <div className={styles.postMeta}>
-                  {post.views != null && post.views > 0 && (
-                    <span className={styles.postViews}>👁 {post.views.toLocaleString()}</span>
-                  )}
                   <span className={`${styles.postStatus} ${styles.statusPublished}`}>✓ Опубліковано</span>
                   <span className={styles.postTime}>
                     {post.published_at
