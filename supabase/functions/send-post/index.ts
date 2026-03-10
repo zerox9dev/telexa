@@ -57,6 +57,11 @@ Deno.serve(async (req) => {
         throw new Error(`Bot is not admin in "${chatData.result.title}"`)
       }
 
+      // Check for duplicate
+      const { data: existing } = await supabase.from('channels')
+        .select('id').eq('user_id', user.id).eq('chat_id', String(chatData.result.id)).maybeSingle()
+      if (existing) throw new Error('This channel is already connected')
+
       const countRes = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChatMemberCount`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
