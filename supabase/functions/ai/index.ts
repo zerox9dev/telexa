@@ -144,11 +144,15 @@ Follow Telegram style: line breaks, few emojis, no corporate speak.`
       const html = await pageRes.text()
 
       // Parse post texts from HTML
-      const postRegex = /<div class="tgme_widget_message_text[^"]*"[^>]*>([\s\S]*?)<\/div>/g
+      // Split by message text divs and extract content between them
+      const parts = html.split(/<div class="tgme_widget_message_text[^"]*"[^>]*>/)
       const rawPosts: string[] = []
-      let match
-      while ((match = postRegex.exec(html)) !== null && rawPosts.length < 20) {
-        const text = match[1]
+      for (let i = 1; i < parts.length && rawPosts.length < 20; i++) {
+        // Take content up to the closing </div> (find the first one not nested)
+        let content = parts[i]
+        const endIdx = content.indexOf('</div>')
+        if (endIdx !== -1) content = content.substring(0, endIdx)
+        const text = content
           .replace(/<br\s*\/?>/g, '\n')
           .replace(/<[^>]+>/g, '')
           .replace(/&amp;/g, '&')
@@ -156,6 +160,7 @@ Follow Telegram style: line breaks, few emojis, no corporate speak.`
           .replace(/&gt;/g, '>')
           .replace(/&quot;/g, '"')
           .replace(/&#39;/g, "'")
+          .replace(/&nbsp;/g, ' ')
           .trim()
         if (text.length > 30) rawPosts.push(text)
       }
