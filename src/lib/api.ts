@@ -1,8 +1,8 @@
 import { supabase, isSupabaseConfigured } from './supabase'
 
-const FUNCTION_URL = import.meta.env.VITE_SUPABASE_URL
-  ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-post`
-  : ''
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || ''
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
+const FUNCTION_URL = SUPABASE_URL ? `${SUPABASE_URL}/functions/v1/send-post` : ''
 
 async function callEdgeFunction(body: Record<string, unknown>) {
   const { data: { session } } = await supabase.auth.getSession()
@@ -13,6 +13,7 @@ async function callEdgeFunction(body: Record<string, unknown>) {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${session.access_token}`,
+      'apikey': SUPABASE_ANON_KEY,
     },
     body: JSON.stringify(body),
   })
