@@ -99,7 +99,11 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
           <div className={styles.channelList}>
             {channels.map(ch => (
               <div key={ch.id} className={styles.channelItem}>
-                <div className={styles.channelDot} />
+                {ch.photo_url ? (
+                  <img src={ch.photo_url} className={styles.channelAvatar} alt="" />
+                ) : (
+                  <div className={styles.channelDot} />
+                )}
                 <span className={styles.channelName}>{ch.title}</span>
               </div>
             ))}

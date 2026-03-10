@@ -220,6 +220,14 @@
   box-shadow: 0 0 0 2px var(--tg-green-light);
 }
 
+.channelAvatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
 .channelName {
   font-size: 13px;
   color: var(--text-secondary);

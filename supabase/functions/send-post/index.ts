@@ -69,6 +69,20 @@ Deno.serve(async (req) => {
       })
       const countData = await countRes.json()
 
+      // Get channel photo URL
+      let photoUrl: string | null = null
+      if (chatData.result.photo?.big_file_id) {
+        const fileRes = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getFile`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ file_id: chatData.result.photo.big_file_id }),
+        })
+        const fileData = await fileRes.json()
+        if (fileData.ok && fileData.result.file_path) {
+          photoUrl = `https://api.telegram.org/file/bot${BOT_TOKEN}/${fileData.result.file_path}`
+        }
+      }
+
       const { data: channel, error: insertErr } = await supabase.from('channels').insert({
         user_id: user.id,
         bot_token: 'server-managed',
@@ -76,6 +90,8 @@ Deno.serve(async (req) => {
         title: chatData.result.title,
         username: chatData.result.username || null,
         member_count: countData.ok ? countData.result : null,
+        photo_url: photoUrl,
+        description: chatData.result.description || null,
       }).select().single()
 
       if (insertErr) throw new Error(insertErr.message)

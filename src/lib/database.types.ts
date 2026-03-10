@@ -8,6 +8,8 @@ export interface Channel {
   title: string
   username: string | null
   member_count: number | null
+  photo_url: string | null
+  description: string | null
   created_at: string
 }
 

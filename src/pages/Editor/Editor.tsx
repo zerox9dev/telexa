@@ -247,9 +247,13 @@ export function Editor() {
               </svg>
             </button>
             <div className={styles.tgHeaderInfo}>
-              <div className={styles.tgAvatar}>
-                {(selectedChannel?.title || 'T').charAt(0)}
-              </div>
+              {selectedChannel?.photo_url ? (
+                <img src={selectedChannel.photo_url} className={styles.tgAvatar} alt="" />
+              ) : (
+                <div className={styles.tgAvatar}>
+                  {(selectedChannel?.title || 'T').charAt(0)}
+                </div>
+              )}
               <div>
                 <div className={styles.tgChannelName}>{selectedChannel?.title || 'Назва каналу'}</div>
                 <div className={styles.tgSubs}>{selectedChannel?.member_count?.toLocaleString() || '0'} підписників</div>
