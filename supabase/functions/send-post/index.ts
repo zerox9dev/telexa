@@ -109,6 +109,7 @@ Deno.serve(async (req) => {
 
       await supabase.from('posts').update({
         status: 'published', published_at: new Date().toISOString(),
+        telegram_message_id: tgResult.result?.message_id || null,
         error: null, updated_at: new Date().toISOString(),
       }).eq('id', postId)
 
@@ -135,6 +136,7 @@ Deno.serve(async (req) => {
         if (tgResult.ok) {
           await supabase.from('posts').update({
             status: 'published', published_at: new Date().toISOString(),
+            telegram_message_id: tgResult.result?.message_id || null,
             error: null, updated_at: new Date().toISOString(),
           }).eq('id', post.id)
           sent++

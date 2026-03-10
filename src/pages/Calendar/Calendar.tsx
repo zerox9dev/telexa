@@ -49,26 +49,26 @@ export function Calendar() {
     <div className={styles.page}>
       <header className={styles.header}>
         <div className={styles.headerLeft}>
-          <h1 className={styles.title}>Calendar</h1>
+          <h1 className={styles.title}>Календар</h1>
           <p className={styles.subtitle}>
             {currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
           </p>
         </div>
         <div className={styles.actions}>
-          <button className={styles.todayBtn} onClick={today}>Today</button>
+          <button className={styles.todayBtn} onClick={today}>Сьогодні</button>
           <div className={styles.navGroup}>
             <button className={styles.navBtn} onClick={prevMonth}>←</button>
             <button className={styles.navBtn} onClick={nextMonth}>→</button>
           </div>
           <button className={styles.newPostBtn} onClick={() => navigate('/editor')}>
-            New Post
+            Новий пост
           </button>
         </div>
       </header>
 
       <div className={styles.calendarCard}>
         <div className={styles.weekdays}>
-          {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(d => (
+          {['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'].map(d => (
             <div key={d} className={styles.weekday}>{d}</div>
           ))}
         </div>
@@ -108,7 +108,7 @@ export function Calendar() {
                         />
                         <span className={styles.postTime}>{time}</span>
                         <span className={styles.postPreview}>
-                          {post.media_url ? '📷 ' : ''}{post.text || 'Empty'}
+                          {post.media_url ? '📷 ' : ''}{post.text || 'Порожній'}
                         </span>
                         {post.status === 'published' && <span className={styles.statusCheck}>✓</span>}
                         {post.status === 'failed' && <span className={styles.statusFail}>!</span>}

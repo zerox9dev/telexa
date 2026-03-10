@@ -12,9 +12,9 @@ export function AutoPilot() {
   const settings = getAiSettings()
 
   const [channelId, setChannelId] = useState(channels[0]?.id || '')
-  const [channelDesc, setChannelDesc] = useState('Channel about web development, design, and AI tools')
-  const [tone, setTone] = useState('Professional but casual, no corporate slang, direct and punchy')
-  const [topic, setTopic] = useState('React 19 new features and how to use them')
+  const [channelDesc, setChannelDesc] = useState('Канал про веб-розробку, дизайн та AI-інструменти')
+  const [tone, setTone] = useState('Професійний але невимушений, без корпоративного жаргону, прямий і лаконічний')
+  const [topic, setTopic] = useState('Нові фічі React 19 та як їх використовувати')
   const [language, setLanguage] = useState('Ukrainian')
   const [postCount, setPostCount] = useState(3)
   
@@ -23,8 +23,8 @@ export function AutoPilot() {
   const [success, setSuccess] = useState('')
 
   const handleGenerate = async () => {
-    if (!channelId) return setError('Please select a channel first')
-    if (!channelDesc || !topic) return setError('Please fill all fields')
+    if (!channelId) return setError('Спочатку оберіть канал')
+    if (!channelDesc || !topic) return setError('Заповніть усі поля')
 
     setLoading(true)
     setError('')
@@ -51,11 +51,11 @@ export function AutoPilot() {
         })
       }
 
-      setSuccess(`Successfully generated ${drafts.length} drafts!`)
+      setSuccess(`Успішно згенеровано ${drafts.length} чернеток!`)
       setTimeout(() => navigate('/dashboard'), 2000)
 
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Something went wrong')
+      setError(e instanceof Error ? e.message : 'Щось пішло не так')
     } finally {
       setLoading(false)
     }

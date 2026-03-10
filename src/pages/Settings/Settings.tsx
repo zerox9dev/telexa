@@ -191,16 +191,16 @@ export function Settings() {
         <div className={styles.cardHeader}>
           <div className={styles.cardIcon}>✦</div>
           <div>
-            <h2 className={styles.cardTitle}>AI Drafts</h2>
+            <h2 className={styles.cardTitle}>AI-чернетки</h2>
             <p className={styles.cardDesc}>
-              Connect OpenAI or Anthropic to generate post drafts from topics
+              Підключіть OpenAI або Anthropic для генерації чернеток постів з тем
             </p>
           </div>
         </div>
 
         <div className={styles.connectForm}>
           <div className={styles.field}>
-            <label className={styles.fieldLabel}>Provider</label>
+            <label className={styles.fieldLabel}>Провайдер</label>
             <div className={styles.providerToggle}>
               <button
                 className={`${styles.providerBtn} ${aiProvider === 'openai' ? styles.providerActive : ''}`}
@@ -218,7 +218,7 @@ export function Settings() {
           </div>
 
           <div className={styles.field}>
-            <label className={styles.fieldLabel}>API Key</label>
+            <label className={styles.fieldLabel}>API-ключ</label>
             <div className={styles.tokenInput}>
               <input
                 type={showAiKey ? 'text' : 'password'}
@@ -242,7 +242,7 @@ export function Settings() {
             onClick={handleSaveAi}
             disabled={!aiApiKey.trim()}
           >
-            {aiSaved ? 'Saved ✓' : 'Save AI Settings'}
+            {aiSaved ? 'Збережено ✓' : 'Зберегти налаштування AI'}
           </button>
         </div>
       </section>
@@ -257,27 +257,27 @@ export function Settings() {
             </svg>
           </div>
           <div>
-            <h2 className={styles.cardTitle}>Account</h2>
+            <h2 className={styles.cardTitle}>Акаунт</h2>
           </div>
         </div>
 
         <div className={styles.fields}>
           <div className={styles.fieldRow}>
-            <span className={styles.fieldLabel}>Email</span>
+            <span className={styles.fieldLabel}>Пошта</span>
             <span className={styles.fieldValue}>{user?.email || '—'}</span>
           </div>
           <div className={styles.fieldRow}>
-            <span className={styles.fieldLabel}>Plan</span>
+            <span className={styles.fieldLabel}>Тариф</span>
             <span className={`${styles.fieldValue} ${styles.planBadge}`}>Free</span>
           </div>
           <div className={styles.fieldRow}>
-            <span className={styles.fieldLabel}>Channels</span>
+            <span className={styles.fieldLabel}>Канали</span>
             <span className={styles.fieldValue}>{channels.length}</span>
           </div>
         </div>
 
         <button className={styles.signOutBtn} onClick={signOut}>
-          Sign Out
+          Вийти
         </button>
       </section>
     </div>

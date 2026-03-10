@@ -130,6 +130,9 @@ export function Dashboard() {
                   </div>
                 </div>
                 <div className={styles.postMeta}>
+                  {post.views != null && post.views > 0 && (
+                    <span className={styles.postViews}>👁 {post.views.toLocaleString()}</span>
+                  )}
                   <span className={`${styles.postStatus} ${styles.statusPublished}`}>✓ Опубліковано</span>
                   <span className={styles.postTime}>
                     {post.published_at
