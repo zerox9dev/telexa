@@ -13,6 +13,7 @@ export function Editor() {
 
   const [channelId, setChannelId] = useState('')
   const [text, setText] = useState('')
+  const [mediaUrl, setMediaUrl] = useState<string | undefined>()
   const [mediaUrl, setMediaUrl] = useState<string | null>(null)
   const [scheduledAt, setScheduledAt] = useState('')
   const [saving, setSaving] = useState(false)
@@ -60,6 +61,7 @@ export function Editor() {
     try {
       await createPost({
         channel_id: channelId || channels[0]?.id || '',
+        media_url: mediaUrl,
         text: text.trim(),
         media_url: mediaUrl || undefined,
         scheduled_at: scheduledAt ? new Date(scheduledAt).toISOString() : undefined,
@@ -83,6 +85,7 @@ export function Editor() {
     try {
       const post = await createPost({
         channel_id: channelId,
+        media_url: mediaUrl,
         text: text.trim(),
         media_url: mediaUrl || undefined,
         status: 'scheduled',
@@ -178,6 +181,16 @@ export function Editor() {
             <label className={styles.label}>Message</label>
             
             <div className={styles.textareaWrap}>
+              {mediaUrl <div className={styles.textareaWrap}><div className={styles.textareaWrap}> (
+                <div className={styles.mediaPreview} style={{ margin: '14px 14px 0' }}>
+                  <img src={mediaUrl} className={styles.mediaImg} alt="Preview" />
+                  <button 
+                    className={styles.mediaRemoveBtn}
+                    onClick={() => setMediaUrl(undefined)}
+                    title="Remove image"
+                  >×</button>
+                </div>
+              )}
               {/* Image attachment preview in editor */}
               {mediaUrl && (
                 <div className={styles.mediaAttachment}>
@@ -249,6 +262,19 @@ export function Editor() {
           </div>
           <div className={styles.previewChat}>
             <div className={styles.chatBg}>
+              {(text || mediaUrl) ? (
+                <div className={styles.message}>
+                  <div className={`${styles.messageBody} ${mediaUrl ? styles.messageBodyWithPhoto : ''}`}>
+                    {mediaUrl <div className={styles.chatBg}><div className={styles.chatBg}> <img src={mediaUrl} className={styles.messagePhoto} alt="TG Preview" />}
+                    {text <div className={styles.chatBg}><div className={styles.chatBg}> <p className={`${styles.messageText} ${mediaUrl ? styles.messageTextWithPhoto : ''}`}>{text}</p>}
+                    <span className={`${styles.messageTime} ${mediaUrl ? styles.messageTimeWithPhoto : ''}`}>
+                      {timeStr}
+                      <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
+                        <path d="M1 5L4 8L10 2" stroke="#4FAE4E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M6 5L9 8L15 2" stroke="#4FAE4E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
+                  </div>
               {(text || mediaUrl) ? (
                 <div className={styles.message}>
                   <div className={styles.messageBody}>
