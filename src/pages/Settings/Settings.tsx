@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useChannels } from '../../hooks/useChannels'
 import { useAuth } from '../../lib/auth'
 import { isSupabaseConfigured } from '../../lib/supabase'
@@ -15,19 +15,7 @@ export function Settings() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
-  // AI settings
-  const [aiProvider, setAiProvider] = useState<'openai' | 'anthropic'>('openai')
-  const [aiApiKey, setAiApiKey] = useState('')
-  const [showAiKey, setShowAiKey] = useState(false)
-  const [aiSaved, setAiSaved] = useState(false)
 
-  useEffect(() => {
-    const s = getAiSettings()
-    if (s) {
-      setAiProvider(s.provider)
-      setAiApiKey(s.apiKey)
-    }
-  }, [])
 
   const handleConnect = async () => {
     if (!channelUsername.trim()) return setError('Введіть юзернейм каналу (напр. @mychannel)')
@@ -48,17 +36,12 @@ export function Settings() {
     }
   }
 
-  const handleSaveAi = () => {
-    saveAiSettings(aiProvider, aiApiKey)
-    setAiSaved(true)
-    setTimeout(() => setAiSaved(false), 2000)
-  }
 
   return (
     <div className={styles.page}>
       <header className={styles.header}>
         <h1 className={styles.title}>Налаштування</h1>
-        <p className={styles.subtitle}>Керуйте каналами та AI</p>
+        <p className={styles.subtitle}>Керуйте каналами та акаунтом</p>
       </header>
 
       {/* Connect Channel */}
@@ -183,67 +166,6 @@ export function Settings() {
             ))}
           </div>
         )}
-      </section>
-
-      {/* AI Settings */}
-      <section className={styles.card}>
-        <div className={styles.cardHeader}>
-          <div className={styles.cardIcon}>✦</div>
-          <div>
-            <h2 className={styles.cardTitle}>AI-чернетки</h2>
-            <p className={styles.cardDesc}>
-              Підключіть OpenAI або Anthropic для генерації чернеток постів з тем
-            </p>
-          </div>
-        </div>
-
-        <div className={styles.connectForm}>
-          <div className={styles.field}>
-            <label className={styles.fieldLabel}>Провайдер</label>
-            <div className={styles.providerToggle}>
-              <button
-                className={`${styles.providerBtn} ${aiProvider === 'openai' ? styles.providerActive : ''}`}
-                onClick={() => setAiProvider('openai')}
-              >
-                OpenAI
-              </button>
-              <button
-                className={`${styles.providerBtn} ${aiProvider === 'anthropic' ? styles.providerActive : ''}`}
-                onClick={() => setAiProvider('anthropic')}
-              >
-                Anthropic
-              </button>
-            </div>
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.fieldLabel}>API-ключ</label>
-            <div className={styles.tokenInput}>
-              <input
-                type={showAiKey ? 'text' : 'password'}
-                className={styles.input}
-                value={aiApiKey}
-                onChange={e => setAiApiKey(e.target.value)}
-                placeholder={aiProvider === 'openai' ? 'sk-...' : 'sk-ant-...'}
-                spellCheck={false}
-              />
-              <button
-                className={styles.toggleBtn}
-                onClick={() => setShowAiKey(!showAiKey)}
-              >
-                {showAiKey ? '🙈' : '👁'}
-              </button>
-            </div>
-          </div>
-
-          <button
-            className={styles.connectBtn}
-            onClick={handleSaveAi}
-            disabled={!aiApiKey.trim()}
-          >
-            {aiSaved ? 'Збережено ✓' : 'Зберегти налаштування AI'}
-          </button>
-        </div>
       </section>
 
       {/* Account */}

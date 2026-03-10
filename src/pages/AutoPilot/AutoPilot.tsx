@@ -2,15 +2,13 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useChannels } from '../../hooks/useChannels'
 import { usePosts } from '../../hooks/usePosts'
-import { getAiSettings, generateAutoPilotDrafts } from '../../lib/ai'
+import { generateAutoPilotDrafts } from '../../lib/ai'
 import styles from './AutoPilot.module.css'
 
 export function AutoPilot() {
   const navigate = useNavigate()
   const { channels } = useChannels()
   const { createPost } = usePosts()
-  const settings = getAiSettings()
-
   const [channelId, setChannelId] = useState(channels[0]?.id || '')
   const [channelDesc, setChannelDesc] = useState('Канал про веб-розробку, дизайн та AI-інструменти')
   const [tone, setTone] = useState('Професійний але невимушений, без корпоративного жаргону, прямий і лаконічний')
@@ -59,22 +57,6 @@ export function AutoPilot() {
     } finally {
       setLoading(false)
     }
-  }
-
-  if (!settings) {
-    return (
-      <div className={styles.page}>
-        <div className={styles.card}>
-          <h2 className={styles.title}>AI Автопілот</h2>
-          <p className={styles.subtitle} style={{ marginTop: 12, marginBottom: 16 }}>
-            Спочатку налаштуйте AI-провайдера, щоб використовувати Автопілот.
-          </p>
-          <button className={styles.settingsLink} onClick={() => navigate('/settings')}>
-            Перейти до налаштувань →
-          </button>
-        </div>
-      </div>
-    )
   }
 
   return (

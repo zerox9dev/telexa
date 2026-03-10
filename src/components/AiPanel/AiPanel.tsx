@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { generatePost, improvePost, getAiSettings } from '../../lib/ai'
+import { generatePost, improvePost } from '../../lib/ai'
 import styles from './AiPanel.module.css'
 
 type Tone = 'casual' | 'professional' | 'educational' | 'provocative'
@@ -13,14 +12,12 @@ interface AiPanelProps {
 }
 
 export function AiPanel({ channelName, currentText, onGenerated, onClose }: AiPanelProps) {
-  const navigate = useNavigate()
   const [topic, setTopic] = useState('')
   const [tone, setTone] = useState<Tone>('casual')
   const [language, setLanguage] = useState('Ukrainian')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  const settings = getAiSettings()
   const hasText = currentText.trim().length > 0
 
   const handleGenerate = async () => {
@@ -63,41 +60,18 @@ export function AiPanel({ channelName, currentText, onGenerated, onClose }: AiPa
     }
   }
 
-  if (!settings) {
-    return (
-      <div className={styles.panel}>
-        <div className={styles.header}>
-          <div className={styles.headerLeft}>
-            <span className={styles.sparkle}>✦</span>
-            <span className={styles.headerTitle}>AI-чернетка</span>
-          </div>
-          <button className={styles.closeBtn} onClick={onClose}>×</button>
-        </div>
-        <div className={styles.body}>
-          <div className={styles.notConfigured}>
-            <p className={styles.notConfiguredText}>Додайте API-ключ для використання AI-чернеток</p>
-            <button className={styles.settingsLink} onClick={() => navigate('/settings')}>
-              Відкрити налаштування →
-            </button>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className={styles.panel}>
       <div className={styles.header}>
         <div className={styles.headerLeft}>
           <span className={styles.sparkle}>✦</span>
           <span className={styles.headerTitle}>AI-чернетка</span>
-          <span className={styles.badge}>{settings.provider === 'anthropic' ? 'Claude' : 'GPT'}</span>
+          <span className={styles.badge}>GPT</span>
         </div>
         <button className={styles.closeBtn} onClick={onClose}>×</button>
       </div>
 
       <div className={styles.body}>
-        {/* Generate from topic */}
         <div className={styles.topicRow}>
           <input
             className={styles.topicInput}
@@ -116,7 +90,6 @@ export function AiPanel({ channelName, currentText, onGenerated, onClose }: AiPa
           </button>
         </div>
 
-        {/* Tone + Language */}
         <div className={styles.options}>
           {(['casual', 'professional', 'educational', 'provocative'] as Tone[]).map(t => (
             <button
@@ -139,7 +112,6 @@ export function AiPanel({ channelName, currentText, onGenerated, onClose }: AiPa
           ))}
         </div>
 
-        {/* Improve existing text */}
         {hasText && (
           <div className={styles.improveRow}>
             <button className={styles.improveBtn} onClick={() => handleImprove('Make it shorter and punchier')} disabled={loading}>
