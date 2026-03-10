@@ -132,20 +132,13 @@ export function usePosts(channelId?: string) {
       return updated
     }
 
-    // Supabase mode
-    const post = posts.find(p => p.id === postId)
-    if (!post) throw new Error('Post not found')
-    
-    const updated = await publishPost(post)
-    
-    const { data, error } = await (supabase as any).from('posts').update({
-      status: updated.status,
-      published_at: updated.published_at,
-      error: updated.error,
-      updated_at: new Date().toISOString()
-    }).eq('id', postId).select().single()
+    // Supabase mode: call Edge Function directly (don't rely on local state)
+    const { sendPostViaServer } = await import('../lib/api')
+    await sendPostViaServer(postId)
 
-    if (error) throw new Error(error.message)
+    // Update local state after successful send
+    const { data } = await (supabase as any).from('posts')
+      .select('*').eq('id', postId).single()
     if (data) setPosts(prev => prev.map(p => p.id === postId ? data : p))
     return data
   }
