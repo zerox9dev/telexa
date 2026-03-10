@@ -31,19 +31,19 @@ export function Settings() {
   }, [])
 
   const handleConnect = async () => {
-    if (!channelUsername.trim()) return setError('Enter channel username (e.g. @mychannel)')
-    if (!isSupabaseConfigured && !botToken.includes(':')) return setError('Invalid bot token format')
+    if (!channelUsername.trim()) return setError('Введіть юзернейм каналу (напр. @mychannel)')
+    if (!isSupabaseConfigured && !botToken.includes(':')) return setError('Невірний формат токена бота')
 
     setConnecting(true)
     setError('')
     setSuccess('')
     try {
       const channel = await connectBot(channelUsername.trim(), isSupabaseConfigured ? undefined : botToken)
-      setSuccess(`Connected "${channel.title}" ✓`)
+      setSuccess(`Підключено "${channel.title}" ✓`)
       setBotToken('')
       setChannelUsername('')
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Connection failed')
+      setError(e instanceof Error ? e.message : 'Не вдалося підключити')
     } finally {
       setConnecting(false)
     }
@@ -58,8 +58,8 @@ export function Settings() {
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        <h1 className={styles.title}>Settings</h1>
-        <p className={styles.subtitle}>Manage your channels and AI</p>
+        <h1 className={styles.title}>Налаштування</h1>
+        <p className={styles.subtitle}>Керуйте каналами та AI</p>
       </header>
 
       {/* Connect Channel */}
@@ -72,18 +72,18 @@ export function Settings() {
             </svg>
           </div>
           <div>
-            <h2 className={styles.cardTitle}>Connect Telegram Channel</h2>
+            <h2 className={styles.cardTitle}>Підключити Telegram-канал</h2>
             <p className={styles.cardDesc}>
               {isSupabaseConfigured ? (
                 <>
-                  1. Add <strong>@TelexaAppBot</strong> as admin to your channel<br />
-                  2. Enter your channel username below
+                  1. Додайте <strong>@TelexaAppBot</strong> як адміна у свій канал<br />
+                  2. Введіть юзернейм каналу нижче
                 </>
               ) : (
                 <>
-                  1. Create a bot via <a href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a><br />
-                  2. Add the bot as <strong>admin</strong> to your channel<br />
-                  3. Paste the token and channel username below
+                  1. Створіть бота через <a href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a><br />
+                  2. Додайте бота як <strong>адміна</strong> у свій канал<br />
+                  3. Вставте токен та юзернейм каналу нижче
                 </>
               )}
             </p>
@@ -97,7 +97,7 @@ export function Settings() {
           {/* Only show bot token field in local mode */}
           {!isSupabaseConfigured && (
             <div className={styles.field}>
-              <label className={styles.fieldLabel}>Bot Token</label>
+              <label className={styles.fieldLabel}>Токен бота</label>
               <div className={styles.tokenInput}>
                 <input
                   type={showToken ? 'text' : 'password'}
@@ -118,7 +118,7 @@ export function Settings() {
           )}
 
           <div className={styles.field}>
-            <label className={styles.fieldLabel}>Channel Username</label>
+            <label className={styles.fieldLabel}>Юзернейм каналу</label>
             <input
               type="text"
               className={styles.inputFull}
@@ -134,7 +134,7 @@ export function Settings() {
             onClick={handleConnect}
             disabled={connecting || !channelUsername.trim()}
           >
-            {connecting ? 'Connecting...' : 'Connect Channel'}
+            {connecting ? 'Підключення...' : 'Підключити канал'}
           </button>
         </div>
       </section>
@@ -149,14 +149,14 @@ export function Settings() {
             </svg>
           </div>
           <div>
-            <h2 className={styles.cardTitle}>Your Channels</h2>
+            <h2 className={styles.cardTitle}>Ваші канали</h2>
           </div>
         </div>
 
         {channels.length === 0 ? (
           <div className={styles.emptyChannels}>
             <div className={styles.emptyDot} />
-            <span>No channels connected yet</span>
+            <span>Ще немає підключених каналів</span>
           </div>
         ) : (
           <div className={styles.channelList}>
@@ -170,7 +170,7 @@ export function Settings() {
                     <div className={styles.channelName}>{ch.title}</div>
                     <div className={styles.channelMeta}>
                       {ch.username && `@${ch.username} · `}
-                      {ch.member_count?.toLocaleString()} subscribers
+                      {ch.member_count?.toLocaleString()} підписників
                     </div>
                   </div>
                 </div>
@@ -178,7 +178,7 @@ export function Settings() {
                   className={styles.removeBtn}
                   onClick={() => removeChannel(ch.id)}
                 >
-                  Remove
+                  Видалити
                 </button>
               </div>
             ))}

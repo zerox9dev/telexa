@@ -35,7 +35,7 @@ export function Editor() {
     
     // Telegram API limit is 10MB for photos, but since we use localStorage, limit to 5MB
     if (file.size > 5 * 1024 * 1024) {
-      setError('File is too large (max 5MB)')
+      setError('Файл занадто великий (макс. 5 МБ)')
       return
     }
 
@@ -45,16 +45,16 @@ export function Editor() {
       const url = await uploadMedia(file)
       setMediaUrl(url)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Upload failed')
+      setError(err instanceof Error ? err.message : 'Помилка завантаження')
     } finally {
       setUploadingMedia(false)
     }
   }
 
   const handleSave = async (status: 'draft' | 'scheduled') => {
-    if (!text.trim() && !mediaUrl) return setError('Add text or media first')
-    if (status === 'scheduled' && !channelId) return setError('Select a channel')
-    if (status === 'scheduled' && !scheduledAt) return setError('Pick a date and time')
+    if (!text.trim() && !mediaUrl) return setError('Додайте текст або медіа')
+    if (status === 'scheduled' && !channelId) return setError('Оберіть канал')
+    if (status === 'scheduled' && !scheduledAt) return setError('Оберіть дату та час')
 
     setSaving(true)
     setError('')
@@ -69,15 +69,15 @@ export function Editor() {
       })
       navigate('/dashboard')
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to save')
+      setError(e instanceof Error ? e.message : 'Не вдалося зберегти')
     } finally {
       setSaving(false)
     }
   }
 
   const handleSendNow = async () => {
-    if (!text.trim() && !mediaUrl) return setError('Add text or media first')
-    if (!channelId) return setError('Select a channel')
+    if (!text.trim() && !mediaUrl) return setError('Додайте текст або медіа')
+    if (!channelId) return setError('Оберіть канал')
 
     setSending(true)
     setError('')
@@ -90,10 +90,10 @@ export function Editor() {
         status: 'scheduled',
       })
       await sendNow(post.id)
-      setSuccess('Published to Telegram ✓')
+      setSuccess('Опубліковано в Telegram ✓')
       setTimeout(() => navigate('/dashboard'), 1500)
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to send')
+      setError(e instanceof Error ? e.message : 'Не вдалося надіслати')
     } finally {
       setSending(false)
     }
@@ -103,8 +103,8 @@ export function Editor() {
     <div className={styles.page}>
       <header className={styles.header}>
         <div>
-          <h1 className={styles.title}>New Post</h1>
-          <p className={styles.subtitle}>Compose and schedule</p>
+          <h1 className={styles.title}>Новий пост</h1>
+          <p className={styles.subtitle}>Створіть та заплануйте</p>
         </div>
         <div className={styles.actions}>
           <button
@@ -119,7 +119,7 @@ export function Editor() {
             onClick={() => handleSave('draft')}
             disabled={saving || sending || uploadingMedia}
           >
-            Save Draft
+            Зберегти чернетку
           </button>
           <button
             className={styles.scheduleBtn}
@@ -130,7 +130,7 @@ export function Editor() {
               <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.5" />
               <path d="M8 4.5V8L10.5 9.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
-            {saving ? 'Saving...' : 'Schedule'}
+            {saving ? 'Збереження...' : 'Запланувати'}
           </button>
           <button
             className={styles.sendBtn}
@@ -140,7 +140,7 @@ export function Editor() {
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
               <path d="M2 3L14 8L2 13V9L10 8L2 7V3Z" fill="currentColor" />
             </svg>
-            {sending ? 'Sending...' : 'Send Now'}
+            {sending ? 'Надсилання...' : 'Надіслати зараз'}
           </button>
         </div>
       </header>
@@ -161,13 +161,13 @@ export function Editor() {
         {/* Left: Editor */}
         <div className={styles.editorPanel}>
           <div className={styles.field}>
-            <label className={styles.label}>Channel</label>
+            <label className={styles.label}>Канал</label>
             <select
               className={styles.select}
               value={channelId}
               onChange={e => setChannelId(e.target.value)}
             >
-              <option value="">Select channel...</option>
+              <option value="">Оберіть канал...</option>
               {channels.map(ch => (
                 <option key={ch.id} value={ch.id}>
                   {ch.title} {ch.username ? `(@${ch.username})` : ''}
@@ -177,7 +177,7 @@ export function Editor() {
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label}>Message</label>
+            <label className={styles.label}>Повідомлення</label>
             <div className={styles.textareaWrap}>
               {mediaUrl && (
                 <div className={styles.mediaPreview}>
@@ -185,7 +185,7 @@ export function Editor() {
                   <button 
                     className={styles.mediaRemoveBtn}
                     onClick={() => setMediaUrl(undefined)}
-                    title="Remove image"
+                    title="Видалити зображення"
                   >×</button>
                 </div>
               )}
@@ -193,14 +193,14 @@ export function Editor() {
                 className={styles.textarea}
                 value={text}
                 onChange={e => setText(e.target.value)}
-                placeholder="Write your message or use AI to generate..."
+                placeholder="Напишіть повідомлення або згенеруйте за допомогою AI..."
                 rows={10}
                 maxLength={4096}
               />
               <div className={styles.textareaFooter}>
                 <label
                   className={uploadingMedia ? styles.attachBtnUploading : styles.attachBtn}
-                  title="Attach media"
+                  title="Прикріпити медіа"
                   style={{ opacity: uploadingMedia ? 0.5 : 1 }}>
                   <input 
                     type="file" 
@@ -221,7 +221,7 @@ export function Editor() {
 
           <div className={styles.scheduleRow}>
             <div className={styles.field}>
-              <label className={styles.label}>Date & Time</label>
+              <label className={styles.label}>Дата і час</label>
               <input
                 type="datetime-local"
                 className={styles.input}
@@ -230,7 +230,7 @@ export function Editor() {
               />
             </div>
             <div className={styles.field}>
-              <label className={styles.label}>Timezone</label>
+              <label className={styles.label}>Часовий пояс</label>
               <select className={styles.select} defaultValue={Intl.DateTimeFormat().resolvedOptions().timeZone}>
                 <option>{Intl.DateTimeFormat().resolvedOptions().timeZone}</option>
               </select>
@@ -241,9 +241,9 @@ export function Editor() {
         {/* Right: TG Preview */}
         <div className={styles.previewPanel}>
           <div className={styles.previewHeader}>
-            <span className={styles.previewLabel}>Preview</span>
+            <span className={styles.previewLabel}>Прев'ю</span>
             <span className={styles.previewChannel}>
-              {selectedChannel?.title || 'Channel Name'}
+              {selectedChannel?.title || 'Назва каналу'}
             </span>
           </div>
           <div className={styles.previewChat}>
@@ -273,7 +273,7 @@ export function Editor() {
                 </div>
               ) : (
                 <div className={styles.previewEmpty}>
-                  Start typing to see preview
+                  Почніть писати, щоб побачити прев'ю
                 </div>
               )}
             </div>

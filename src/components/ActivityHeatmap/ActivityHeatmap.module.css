@@ -1,0 +1,96 @@
+.wrap {
+  animation: fadeIn var(--duration-slow) var(--ease-out);
+}
+
+.grid {
+  display: flex;
+  gap: 3px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.cell {
+  width: 13px;
+  height: 13px;
+  border-radius: 2px;
+  background: var(--border-light);
+  transition: background var(--duration-fast);
+}
+
+.cell:hover {
+  outline: 1px solid var(--text-muted);
+}
+
+.level0 { background: var(--border-light); }
+.level1 { background: #9be9a8; }
+.level2 { background: #40c463; }
+.level3 { background: #30a14e; }
+.level4 { background: #216e39; }
+
+.months {
+  display: flex;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  padding-left: 32px;
+}
+
+.monthLabel {
+  text-align: left;
+}
+
+.days {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-right: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+  justify-content: space-between;
+  padding: 0;
+}
+
+.dayLabel {
+  height: 13px;
+  display: flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.body {
+  display: flex;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: flex-end;
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.legendCell {
+  width: 13px;
+  height: 13px;
+  border-radius: 2px;
+}
+
+.tooltip {
+  position: fixed;
+  background: var(--text);
+  color: var(--bg);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 100;
+  white-space: nowrap;
+}

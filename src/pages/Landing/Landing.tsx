@@ -35,7 +35,7 @@ export function Landing() {
             Telexa
           </div>
           <button className={styles.loginBtn} onClick={handleStart}>
-            Log In
+            Увійти
           </button>
         </div>
       </div>
@@ -44,22 +44,22 @@ export function Landing() {
         <section className={styles.hero}>
           <div className={styles.heroBadge}>
             <div className={styles.dot} />
-            Local Mode Active
+            Локальний режим
           </div>
           <h1 className={styles.heroTitle}>
-            The smart way to run<br />
-            your Telegram channels.
+            Розумний спосіб вести<br />
+            свої Telegram-канали.
           </h1>
           <p className={styles.heroDesc}>
-            Schedule posts, automate delivery, and grow your audience with 
-            the clean, native-feeling planner for modern creators.
+            Плануйте пости, автоматизуйте публікації та нарощуйте аудиторію 
+            з чистим, зручним планувальником для сучасних креаторів.
           </p>
           <div className={styles.heroCta}>
             <button className={styles.primaryBtn} onClick={handleStart}>
-              {isSupabaseConfigured ? 'Continue with Google' : 'Try it Locally'}
+              {isSupabaseConfigured ? 'Продовжити з Google' : 'Спробувати локально'}
             </button>
             <button className={styles.secondaryBtn} onClick={() => window.open('https://github.com/zerox9dev/telexa', '_blank')}>
-              View on GitHub
+              Переглянути на GitHub
             </button>
           </div>
         </section>
@@ -70,19 +70,19 @@ export function Landing() {
               <div className={styles.chatAvatar}>P</div>
               <div>
                 <div className={styles.chatName}>@Pix2Code</div>
-                <div className={styles.chatSubs}>713 subscribers</div>
+                <div className={styles.chatSubs}>713 підписників</div>
               </div>
             </div>
             <div className={styles.chatBody}>
               <div className={styles.bubble}>
-                Post scheduled perfectly on time. No weird formatting, no extra dashes.
+                Пост опубліковано вчасно. Жодного зайвого форматування, жодних зайвих тире.
                 <div className={styles.bubbleMeta}>
                   10:00 ✓✓
                 </div>
               </div>
               <div className={styles.bubbleScheduled}>
-                <div className={styles.scheduledBadge}>⏳ Scheduled for Tomorrow</div>
-                With clean Telegram-native preview, you always know exactly how your post will look before you send it.
+                <div className={styles.scheduledBadge}>⏳ Заплановано на завтра</div>
+                З чистим Telegram-нативним прев'ю ви завжди точно знаєте, як виглядатиме ваш пост перед відправкою.
                 <div className={styles.bubbleMeta}>
                   14:30
                 </div>
@@ -92,68 +92,68 @@ export function Landing() {
         </section>
 
         <section className={styles.features}>
-          <h2 className={styles.sectionTitle}>Built for Telegram</h2>
+          <h2 className={styles.sectionTitle}>Створено для Telegram</h2>
           <div className={styles.featuresGrid}>
             <div className={styles.feature}>
               <span className={styles.featureIcon}>📝</span>
-              <h3 className={styles.featureName}>Native Preview</h3>
-              <p className={styles.featureDesc}>See exactly how your post will look with Telegram chat bubbles before hitting publish.</p>
+              <h3 className={styles.featureName}>Нативний прев'ю</h3>
+              <p className={styles.featureDesc}>Бачте, як саме виглядатиме ваш пост у вигляді Telegram-бульбашок ще до публікації.</p>
             </div>
             <div className={styles.feature}>
               <span className={styles.featureIcon}>📸</span>
-              <h3 className={styles.featureName}>Media Support</h3>
-              <p className={styles.featureDesc}>Upload photos seamlessly. Texts automatically become native captions under the image.</p>
+              <h3 className={styles.featureName}>Медіа-підтримка</h3>
+              <p className={styles.featureDesc}>Завантажуйте фото без зусиль. Текст автоматично стає нативним підписом під зображенням.</p>
             </div>
             <div className={styles.feature}>
               <span className={styles.featureIcon}>🤖</span>
-              <h3 className={styles.featureName}>AI Drafts</h3>
-              <p className={styles.featureDesc}>Generate and refine posts with OpenAI or Anthropic directly in the editor.</p>
+              <h3 className={styles.featureName}>AI-чернетки</h3>
+              <p className={styles.featureDesc}>Генеруйте та покращуйте пости за допомогою OpenAI або Anthropic прямо в редакторі.</p>
             </div>
           </div>
         </section>
 
         <section className={styles.pricing}>
-          <h2 className={styles.sectionTitle}>Simple Pricing</h2>
-          <p className={styles.pricingDesc}>Start for free. Upgrade when you need more power.</p>
+          <h2 className={styles.sectionTitle}>Прості тарифи</h2>
+          <p className={styles.pricingDesc}>Починайте безкоштовно. Оновіть, коли потрібно більше.</p>
           <div className={styles.plans}>
             <div className={styles.plan}>
               <div className={styles.planName}>Free</div>
-              <div className={styles.planPrice}>$0<span>/mo</span></div>
+              <div className={styles.planPrice}>$0<span>/міс</span></div>
               <ul className={styles.planList}>
-                <li>1 Channel</li>
-                <li>10 Posts per month</li>
-                <li>Local Storage mode</li>
+                <li>1 канал</li>
+                <li>10 постів на місяць</li>
+                <li>Локальне сховище</li>
               </ul>
-              <button className={styles.planBtn} onClick={handleStart}>Get Started</button>
+              <button className={styles.planBtn} onClick={handleStart}>Почати</button>
             </div>
             <div className={`${styles.plan} ${styles.planPro}`}>
-              <div className={styles.proBadge}>Popular</div>
+              <div className={styles.proBadge}>Популярний</div>
               <div className={styles.planName}>Pro</div>
-              <div className={styles.planPrice}>$5<span>/mo</span></div>
+              <div className={styles.planPrice}>$5<span>/міс</span></div>
               <ul className={styles.planList}>
-                <li>Unlimited Channels</li>
-                <li>Unlimited Posts</li>
-                <li>AI Drafts & Refinement</li>
-                <li>Background Cloud Posting</li>
+                <li>Необмежено каналів</li>
+                <li>Необмежено постів</li>
+                <li>AI-чернетки та покращення</li>
+                <li>Хмарна публікація у фоні</li>
               </ul>
-              <button className={styles.planBtnPro}>Upgrade</button>
+              <button className={styles.planBtnPro}>Оновити</button>
             </div>
             <div className={styles.plan}>
               <div className={styles.planName}>Team</div>
-              <div className={styles.planPrice}>$15<span>/mo</span></div>
+              <div className={styles.planPrice}>$15<span>/міс</span></div>
               <ul className={styles.planList}>
-                <li>5 Team Members</li>
-                <li>Approval Workflows</li>
-                <li>Analytics Dashboard</li>
+                <li>5 учасників команди</li>
+                <li>Воркфлоу з погодженням</li>
+                <li>Аналітичний дашборд</li>
               </ul>
-              <button className={styles.planBtn}>Contact Us</button>
+              <button className={styles.planBtn}>Зв'язатися</button>
             </div>
           </div>
         </section>
       </main>
 
       <footer className={styles.footer}>
-        © {new Date().getFullYear()} Telexa. Built by creators for creators.
+        © {new Date().getFullYear()} Telexa. Створено для креаторів.
       </footer>
     </div>
   )

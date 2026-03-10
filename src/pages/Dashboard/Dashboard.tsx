@@ -1,28 +1,29 @@
 import { useNavigate } from 'react-router-dom'
 import { useChannels } from '../../hooks/useChannels'
 import { usePosts } from '../../hooks/usePosts'
+import { ActivityHeatmap } from '../../components/ActivityHeatmap/ActivityHeatmap'
 import styles from './Dashboard.module.css'
 
 export function Dashboard() {
   const navigate = useNavigate()
   const { channels } = useChannels()
-  const { scheduled, published } = usePosts()
+  const { posts, scheduled, published } = usePosts()
 
   const totalViews = published.reduce((sum, p) => sum + (p.views || 0), 0)
 
   const STATS = [
-    { label: 'Scheduled', value: String(scheduled.length), icon: '⏳', color: 'blue' },
-    { label: 'Published', value: String(published.length), icon: '✓', color: 'green' },
-    { label: 'Channels', value: String(channels.length), icon: '📢', color: 'purple' },
-    { label: 'Views', value: totalViews.toLocaleString(), icon: '👁', color: 'orange' },
+    { label: 'Заплановані', value: String(scheduled.length), icon: '⏳', color: 'blue' },
+    { label: 'Опубліковані', value: String(published.length), icon: '✓', color: 'green' },
+    { label: 'Канали', value: String(channels.length), icon: '📢', color: 'purple' },
+    { label: 'Перегляди', value: totalViews.toLocaleString(), icon: '👁', color: 'orange' },
   ]
 
   return (
     <div className={styles.page}>
       <header className={styles.header}>
         <div>
-          <h1 className={styles.title}>Dashboard</h1>
-          <p className={styles.subtitle}>Your posting overview</p>
+          <h1 className={styles.title}>Огляд</h1>
+          <p className={styles.subtitle}>Ваш огляд публікацій</p>
         </div>
       </header>
 
@@ -44,20 +45,26 @@ export function Dashboard() {
 
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>Upcoming Posts</h2>
-          <button className={styles.viewAll} onClick={() => navigate('/calendar')}>View all</button>
+          <h2 className={styles.sectionTitle}>Активність</h2>
+        </div>
+        <ActivityHeatmap posts={posts} />
+      </section>
+
+      <section className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>Найближчі пости</h2>
         </div>
 
         {scheduled.length === 0 ? (
           <div className={styles.emptyState}>
             <div className={styles.emptyBubbles}>
               <div className={styles.bubbleOut}>
-                <span>Your first scheduled post will appear here</span>
+                <span>Ваш перший запланований пост з'явиться тут</span>
                 <span className={styles.bubbleTime}>—:—</span>
               </div>
             </div>
             <button className={styles.emptyAction} onClick={() => navigate('/editor')}>
-              Create your first post →
+              Створити перший пост →
             </button>
           </div>
         ) : (
@@ -79,10 +86,10 @@ export function Dashboard() {
                   </div>
                 </div>
                 <div className={styles.postMeta}>
-                  <span className={styles.postStatus}>⏳ Scheduled</span>
+                  <span className={styles.postStatus}>⏳ Заплановано</span>
                   <span className={styles.postTime}>
                     {post.scheduled_at
-                      ? new Date(post.scheduled_at).toLocaleString('en-US', {
+                      ? new Date(post.scheduled_at).toLocaleString('uk-UA', {
                           month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false,
                         })
                       : '—'}
@@ -96,14 +103,14 @@ export function Dashboard() {
 
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>Published</h2>
+          <h2 className={styles.sectionTitle}>Опубліковані</h2>
         </div>
 
         {published.length === 0 ? (
           <div className={styles.emptyState}>
             <div className={styles.emptyBubbles}>
               <div className={styles.bubbleOut}>
-                <span>Published posts will show up here</span>
+                <span>Опубліковані пости з'являться тут</span>
                 <span className={styles.bubbleTime}>—:—</span>
               </div>
             </div>
@@ -123,10 +130,10 @@ export function Dashboard() {
                   </div>
                 </div>
                 <div className={styles.postMeta}>
-                  <span className={`${styles.postStatus} ${styles.statusPublished}`}>✓ Published</span>
+                  <span className={`${styles.postStatus} ${styles.statusPublished}`}>✓ Опубліковано</span>
                   <span className={styles.postTime}>
                     {post.published_at
-                      ? new Date(post.published_at).toLocaleString('en-US', {
+                      ? new Date(post.published_at).toLocaleString('uk-UA', {
                           month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false,
                         })
                       : '—'}
@@ -141,10 +148,10 @@ export function Dashboard() {
       {channels.length === 0 && (
         <section className={styles.section}>
           <div className={styles.onboarding}>
-            <h3 className={styles.onboardingTitle}>Get started</h3>
-            <p className={styles.onboardingDesc}>Connect your Telegram bot to start scheduling posts.</p>
+            <h3 className={styles.onboardingTitle}>Почніть тут</h3>
+            <p className={styles.onboardingDesc}>Підключіть свого Telegram-бота, щоб почати планувати пости.</p>
             <button className={styles.emptyAction} onClick={() => navigate('/settings')}>
-              Connect Channel →
+              Підключити канал →
             </button>
           </div>
         </section>

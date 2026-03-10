@@ -3,7 +3,6 @@ import { AuthProvider, useAuth } from './lib/auth'
 import { AppLayout } from './layouts/AppLayout/AppLayout'
 import { Landing } from './pages/Landing/Landing'
 import { Dashboard } from './pages/Dashboard/Dashboard'
-import { Calendar } from './pages/Calendar/Calendar'
 import { Editor } from './pages/Editor/Editor'
 import { Settings } from './pages/Settings/Settings'
 import { AutoPilot } from './pages/AutoPilot/AutoPilot'
@@ -39,7 +38,6 @@ function AppRoutes() {
         } />
         <Route element={<PrivateRoute><AppLayout /></PrivateRoute>}>
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/calendar" element={<Calendar />} />
           <Route path="/editor" element={<Editor />} />
           <Route path="/editor/:id" element={<Editor />} />
           <Route path="/autopilot" element={<AutoPilot />} />

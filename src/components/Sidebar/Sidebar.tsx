@@ -5,7 +5,6 @@ import styles from './Sidebar.module.css'
 
 const NAV_ITEMS = [
   { to: '/dashboard', icon: 'grid', label: 'Dashboard' },
-  { to: '/calendar', icon: 'calendar', label: 'Calendar' },
   { to: '/editor', icon: 'edit', label: 'New Post' },
   { to: '/autopilot', icon: 'sparkles', label: 'Auto-Pilot' },
   { to: '/settings', icon: 'settings', label: 'Settings' },
