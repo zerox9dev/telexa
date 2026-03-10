@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useChannels } from '../../hooks/useChannels'
 import { usePosts } from '../../hooks/usePosts'
 import { AiPanel } from '../../components/AiPanel/AiPanel'
@@ -9,13 +9,29 @@ import styles from './Editor.module.css'
 
 export function Editor() {
   const navigate = useNavigate()
+  const { id: editId } = useParams<{ id: string }>()
   const { channels } = useChannels()
-  const { createPost, sendNow } = usePosts()
+  const { posts, createPost, updatePost, sendNow } = usePosts()
 
   const [channelId, setChannelId] = useState('')
   const [text, setText] = useState('')
   const [mediaUrl, setMediaUrl] = useState<string | undefined>()
   const [scheduledAt, setScheduledAt] = useState('')
+  const [loaded, setLoaded] = useState(false)
+
+  // Load existing post when editing
+  useEffect(() => {
+    if (editId && posts.length > 0 && !loaded) {
+      const post = posts.find(p => p.id === editId)
+      if (post) {
+        setText(post.text || '')
+        setChannelId(post.channel_id || '')
+        setMediaUrl(post.media_url || undefined)
+        setScheduledAt(post.scheduled_at || '')
+        setLoaded(true)
+      }
+    }
+  }, [editId, posts, loaded])
   const [saving, setSaving] = useState(false)
   const [sending, setSending] = useState(false)
   const [uploadingMedia, setUploadingMedia] = useState(false)
@@ -91,13 +107,23 @@ export function Editor() {
     setError('')
     setSuccess('')
     try {
-      await createPost({
-        channel_id: channelId || channels[0]?.id || '',
-        text: text.trim(),
-        media_url: mediaUrl,
-        scheduled_at: scheduledAt ? new Date(scheduledAt).toISOString() : undefined,
-        status,
-      })
+      if (editId) {
+        await updatePost(editId, {
+          channel_id: channelId || channels[0]?.id || '',
+          text: text.trim(),
+          media_url: mediaUrl,
+          scheduled_at: scheduledAt ? new Date(scheduledAt).toISOString() : undefined,
+          status,
+        })
+      } else {
+        await createPost({
+          channel_id: channelId || channels[0]?.id || '',
+          text: text.trim(),
+          media_url: mediaUrl,
+          scheduled_at: scheduledAt ? new Date(scheduledAt).toISOString() : undefined,
+          status,
+        })
+      }
       navigate('/dashboard')
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Не вдалося зберегти')
