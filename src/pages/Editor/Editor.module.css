@@ -460,3 +460,32 @@ div.tgAvatar {
     flex-wrap: wrap;
   }
 }
+
+/* Format toolbar */
+.formatBar {
+  display: flex;
+  gap: 2px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--surface);
+}
+
+.formatBtn {
+  width: 32px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-xs);
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all var(--duration-fast);
+}
+
+.formatBtn:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}

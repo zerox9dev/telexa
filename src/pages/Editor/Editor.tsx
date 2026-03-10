@@ -51,6 +51,36 @@ export function Editor() {
     }
   }
 
+  const wrapSelection = (tag: string) => {
+    const el = document.getElementById('editor-textarea') as HTMLTextAreaElement
+    if (!el) return
+    const start = el.selectionStart
+    const end = el.selectionEnd
+    const selected = text.substring(start, end)
+    if (!selected) return
+    const wrapped = `<${tag}>${selected}</${tag}>`
+    const newText = text.substring(0, start) + wrapped + text.substring(end)
+    setText(newText)
+    setTimeout(() => {
+      el.focus()
+      el.setSelectionRange(start, start + wrapped.length)
+    }, 0)
+  }
+
+  const insertLink = () => {
+    const el = document.getElementById('editor-textarea') as HTMLTextAreaElement
+    if (!el) return
+    const start = el.selectionStart
+    const end = el.selectionEnd
+    const selected = text.substring(start, end)
+    const url = prompt('URL:')
+    if (!url) return
+    const linkText = selected || 'посилання'
+    const link = `<a href="${url}">${linkText}</a>`
+    const newText = text.substring(0, start) + link + text.substring(end)
+    setText(newText)
+  }
+
   const handleSave = async (status: 'draft' | 'scheduled') => {
     if (!text.trim() && !mediaUrl) return setError('Додайте текст або медіа')
     if (status === 'scheduled' && !channelId) return setError('Оберіть канал')
@@ -189,7 +219,25 @@ export function Editor() {
                   >×</button>
                 </div>
               )}
+              <div className={styles.formatBar}>
+                <button type="button" className={styles.formatBtn} title="Жирний" onClick={() => wrapSelection('b')}>
+                  <strong>B</strong>
+                </button>
+                <button type="button" className={styles.formatBtn} title="Курсив" onClick={() => wrapSelection('i')}>
+                  <em>I</em>
+                </button>
+                <button type="button" className={styles.formatBtn} title="Моноширинний" onClick={() => wrapSelection('code')}>
+                  {'</>'}
+                </button>
+                <button type="button" className={styles.formatBtn} title="Закреслений" onClick={() => wrapSelection('s')}>
+                  <s>S</s>
+                </button>
+                <button type="button" className={styles.formatBtn} title="Посилання" onClick={insertLink}>
+                  🔗
+                </button>
+              </div>
               <textarea
+                id="editor-textarea"
                 className={styles.textarea}
                 value={text}
                 onChange={e => setText(e.target.value)}
@@ -267,7 +315,7 @@ export function Editor() {
                   <img src={mediaUrl} className={styles.tgPhoto} alt="" />
                 )}
                 {text && (
-                  <div className={styles.tgText}>{text}</div>
+                  <div className={styles.tgText} dangerouslySetInnerHTML={{ __html: text.replace(/\n/g, '<br/>') }} />
                 )}
                 <div className={styles.tgFooter}>
                   <span className={styles.tgTime}>{timeStr}</span>
