@@ -34,6 +34,7 @@ async function callOpenAI(apiKey: string, prompt: string, system?: string): Prom
       ],
       max_tokens: 2000,
       temperature: 0.8,
+
     }),
   })
 
@@ -109,8 +110,20 @@ Follow Telegram style: line breaks, few emojis, no corporate speak.`
 
       let jsonText = await callOpenAI(OPENAI_KEY, prompt)
       jsonText = jsonText.replace(/^```json\s*/m, '').replace(/```\s*$/m, '').trim()
-
-      const posts = JSON.parse(jsonText)
+      // Fix common LLM JSON mistakes
+      jsonText = jsonText.replace(/,\s*]/g, ']')  // trailing comma
+      jsonText = jsonText.replace(/,\s*}/g, '}')  // trailing comma in objects
+      // Extract array if wrapped in object like {"posts": [...]}
+      let posts
+      try {
+        const parsed = JSON.parse(jsonText)
+        posts = Array.isArray(parsed) ? parsed : (parsed.posts || parsed.results || Object.values(parsed)[0])
+      } catch {
+        // Try to extract array from text
+        const match = jsonText.match(/\[[\s\S]*\]/)
+        if (!match) throw new Error('AI не повернув масив постів. Спробуйте ще раз.')
+        posts = JSON.parse(match[0].replace(/,\s*]/g, ']'))
+      }
       if (!Array.isArray(posts)) throw new Error('AI did not return an array')
 
       return new Response(JSON.stringify({ ok: true, posts }), {
