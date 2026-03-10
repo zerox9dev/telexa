@@ -1,11 +1,19 @@
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../lib/auth'
+import { useEffect } from 'react'
 import { isSupabaseConfigured } from '../../lib/supabase'
 import styles from './Landing.module.css'
 
 export function Landing() {
   const navigate = useNavigate()
-  const { signInWithGoogle } = useAuth()
+  const { user, signInWithGoogle } = useAuth()
+
+  useEffect(() => {
+    if (user && isSupabaseConfigured) {
+      navigate('/dashboard')
+    }
+  }, [user, navigate])
+
 
   const handleStart = async () => {
     if (isSupabaseConfigured) {
