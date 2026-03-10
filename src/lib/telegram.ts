@@ -29,22 +29,18 @@ async function tgFetch<T>(token: string, method: string, params?: Record<string,
   return data.result as T
 }
 
-/** Validate bot token and get bot info */
 export async function getBot(token: string): Promise<TgBotInfo> {
   return tgFetch<TgBotInfo>(token, 'getMe')
 }
 
-/** Get chat info (channel must have bot as admin) */
 export async function getChat(token: string, chatId: string | number): Promise<TgChat> {
   return tgFetch<TgChat>(token, 'getChat', { chat_id: chatId })
 }
 
-/** Get member count */
 export async function getChatMemberCount(token: string, chatId: string | number): Promise<number> {
   return tgFetch<number>(token, 'getChatMemberCount', { chat_id: chatId })
 }
 
-/** Check if bot is admin in channel */
 export async function isBotAdmin(token: string, chatId: string | number, botId: number): Promise<boolean> {
   try {
     const member = await tgFetch<TgChatMember>(token, 'getChatMember', {
@@ -57,7 +53,6 @@ export async function isBotAdmin(token: string, chatId: string | number, botId: 
   }
 }
 
-/** Send a text message to a channel */
 export async function sendMessage(
   token: string,
   chatId: string | number,
@@ -71,17 +66,34 @@ export async function sendMessage(
   })
 }
 
-/** Send photo with caption */
+/** Send photo with caption using Base64 Data URL or HTTP URL */
 export async function sendPhoto(
   token: string,
   chatId: string | number,
-  photo: string,
+  photoUrl: string,
   caption?: string,
 ) {
-  return tgFetch(token, 'sendPhoto', {
-    chat_id: chatId,
-    photo,
-    caption,
-    parse_mode: 'HTML',
+  const url = `${TG_API}${token}/sendPhoto`
+  const formData = new FormData()
+  formData.append('chat_id', String(chatId))
+  formData.append('parse_mode', 'HTML')
+  if (caption) formData.append('caption', caption)
+
+  // If it's a data URL (Base64), convert to Blob
+  if (photoUrl.startsWith('data:image')) {
+    const res = await fetch(photoUrl)
+    const blob = await res.blob()
+    formData.append('photo', blob, 'image.jpg')
+  } else {
+    // If it's a regular HTTP URL, just send the URL string
+    formData.append('photo', photoUrl)
+  }
+
+  const res = await fetch(url, {
+    method: 'POST',
+    body: formData,
   })
+  const data = await res.json()
+  if (!data.ok) throw new Error(data.description || 'Telegram API error sending photo')
+  return data.result
 }
