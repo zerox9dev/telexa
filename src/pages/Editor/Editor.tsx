@@ -4,6 +4,7 @@ import { useChannels } from '../../hooks/useChannels'
 import { usePosts } from '../../hooks/usePosts'
 import { AiPanel } from '../../components/AiPanel/AiPanel'
 import { uploadMedia } from '../../lib/storage'
+import { FaBold, FaItalic, FaCode, FaStrikethrough, FaLink, FaPaperclip, FaMagic, FaPaperPlane, FaSave, FaClock, FaChevronLeft } from 'react-icons/fa'
 import styles from './Editor.module.css'
 
 export function Editor() {
@@ -156,10 +157,7 @@ export function Editor() {
             onClick={() => handleSave('scheduled')}
             disabled={saving || sending || uploadingMedia}
           >
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-              <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.5" />
-              <path d="M8 4.5V8L10.5 9.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
+            <FaClock size={13} />
             {saving ? 'Збереження...' : 'Запланувати'}
           </button>
           <button
@@ -167,9 +165,7 @@ export function Editor() {
             onClick={handleSendNow}
             disabled={saving || sending || uploadingMedia}
           >
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-              <path d="M2 3L14 8L2 13V9L10 8L2 7V3Z" fill="currentColor" />
-            </svg>
+            <FaPaperPlane size={13} />
             {sending ? 'Надсилання...' : 'Надіслати зараз'}
           </button>
         </div>
@@ -221,19 +217,19 @@ export function Editor() {
               )}
               <div className={styles.formatBar}>
                 <button type="button" className={styles.formatBtn} title="Жирний" onClick={() => wrapSelection('b')}>
-                  <strong>B</strong>
+                  <FaBold size={13} />
                 </button>
                 <button type="button" className={styles.formatBtn} title="Курсив" onClick={() => wrapSelection('i')}>
-                  <em>I</em>
+                  <FaItalic size={13} />
                 </button>
                 <button type="button" className={styles.formatBtn} title="Моноширинний" onClick={() => wrapSelection('code')}>
-                  {'</>'}
+                  <FaCode size={13} />
                 </button>
                 <button type="button" className={styles.formatBtn} title="Закреслений" onClick={() => wrapSelection('s')}>
-                  <s>S</s>
+                  <FaStrikethrough size={13} />
                 </button>
                 <button type="button" className={styles.formatBtn} title="Посилання" onClick={insertLink}>
-                  🔗
+                  <FaLink size={13} />
                 </button>
               </div>
               <textarea
@@ -256,9 +252,7 @@ export function Editor() {
                     className={styles.hiddenInput} 
                     onChange={handleFileChange}
                   />
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                    <path d="M15.5 9.5L9.5 15.5C7.5 17.5 4.5 17.5 2.5 15.5C0.5 13.5 0.5 10.5 2.5 8.5L10.5 0.5C11.9 -0.9 14.1 -0.9 15.5 0.5C16.9 1.9 16.9 4.1 15.5 5.5L8 13C7.2 13.8 5.8 13.8 5 13C4.2 12.2 4.2 10.8 5 10L11 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                  </svg>
+                  <FaPaperclip size={16} />
                 </label>
                 <span className={styles.charCount}>
                   {text.length}<span className={styles.charMax}> / 4096</span>
@@ -290,9 +284,7 @@ export function Editor() {
         <div className={styles.previewPanel}>
           <div className={styles.tgHeader}>
             <button className={styles.tgBack}>
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M12 4L6 10L12 16" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              <FaChevronLeft size={16} color="white" />
             </button>
             <div className={styles.tgHeaderInfo}>
               {selectedChannel?.photo_url ? (

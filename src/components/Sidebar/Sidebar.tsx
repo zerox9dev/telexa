@@ -1,49 +1,15 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useChannels } from '../../hooks/useChannels'
 import { usePosts } from '../../hooks/usePosts'
+import { FaThLarge, FaPen, FaRocket, FaCog, FaPlus } from 'react-icons/fa'
 import styles from './Sidebar.module.css'
 
 const NAV_ITEMS = [
-  { to: '/dashboard', icon: 'grid', label: 'Огляд' },
-  { to: '/editor', icon: 'edit', label: 'Новий пост' },
-  { to: '/autopilot', icon: 'sparkles', label: 'Автопілот' },
-  { to: '/settings', icon: 'settings', label: 'Налаштування' },
+  { to: '/dashboard', icon: <FaThLarge />, label: 'Огляд' },
+  { to: '/editor', icon: <FaPen />, label: 'Новий пост' },
+  { to: '/autopilot', icon: <FaRocket />, label: 'Автопілот' },
+  { to: '/settings', icon: <FaCog />, label: 'Налаштування' },
 ]
-
-const ICONS: Record<string, React.ReactNode> = {
-  grid: (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <rect x="2" y="2" width="7" height="7" rx="2" fill="currentColor" />
-      <rect x="11" y="2" width="7" height="7" rx="2" fill="currentColor" opacity="0.5" />
-      <rect x="2" y="11" width="7" height="7" rx="2" fill="currentColor" opacity="0.5" />
-      <rect x="11" y="11" width="7" height="7" rx="2" fill="currentColor" opacity="0.3" />
-    </svg>
-  ),
-  calendar: (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <rect x="2" y="3" width="16" height="14" rx="3" stroke="currentColor" strokeWidth="1.5" />
-      <line x1="2" y1="8" x2="18" y2="8" stroke="currentColor" strokeWidth="1.5" />
-      <line x1="6" y1="1.5" x2="6" y2="4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="14" y1="1.5" x2="14" y2="4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  ),
-  edit: (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <path d="M13.5 3.5L16.5 6.5L6.5 16.5H3.5V13.5L13.5 3.5Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-    </svg>
-  ),
-  sparkles: (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <path d="M10 2l1.5 4.5L16 8l-4.5 1.5L10 14l-1.5-4.5L4 8l4.5-1.5L10 2z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-    </svg>
-  ),
-  settings: (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <circle cx="10" cy="10" r="3" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M10 1.5V4M10 16V18.5M1.5 10H4M16 10H18.5M3.4 3.4L5.2 5.2M14.8 14.8L16.6 16.6M16.6 3.4L14.8 5.2M5.2 14.8L3.4 16.6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  ),
-}
 
 export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const navigate = useNavigate()
@@ -52,7 +18,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const { posts } = usePosts()
 
   const postCount = posts.length
-  const limit = 10 // free plan
+  const limit = 10
   const pct = Math.min((postCount / limit) * 100, 100)
 
   return (
@@ -60,7 +26,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       <div className={styles.brand} onClick={() => go('/')}>
         <div className={styles.logoMark}>
           <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-            <path d="M3 7.5L14 2L25 7.5V20.5L14 26L3 20.5V7.5Z" fill="#229ED9" />
+            <path d="M3 7.5L14 2L25 7.5V20.5L14 26L3 20.5V7.5Z" fill="#55AB67" />
             <path d="M8 13L12 17L20 9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
@@ -68,7 +34,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       </div>
 
       <button className={styles.newPostBtn} onClick={() => go('/editor')}>
-        <span className={styles.newPostIcon}>+</span>
+        <FaPlus size={12} />
         Новий пост
       </button>
 
@@ -82,7 +48,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
               `${styles.navItem} ${isActive ? styles.active : ''}`
             }
           >
-            <span className={styles.navIcon}>{ICONS[item.icon]}</span>
+            <span className={styles.navIcon}>{item.icon}</span>
             <span className={styles.navLabel}>{item.label}</span>
           </NavLink>
         ))}
@@ -91,10 +57,12 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       <div className={styles.channels}>
         <div className={styles.channelsHeader}>
           <span>Канали</span>
-          <button className={styles.addChannel} onClick={() => go('/settings')}>+</button>
+          <button className={styles.addChannel} onClick={() => go('/settings')}>
+            <FaPlus size={10} />
+          </button>
         </div>
         {channels.length === 0 ? (
-          <div className={styles.noChannels}>Ще немає каналів</div>
+          <div className={styles.noChannels}>Каналів ще немає</div>
         ) : (
           <div className={styles.channelList}>
             {channels.map(ch => (
@@ -118,7 +86,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
           </div>
           <span className={styles.usageText}>{postCount} / {limit} постів</span>
         </div>
-        <button className={styles.upgrade}>Оновити до Pro</button>
+        <button className={styles.upgrade}>Перейти на Pro</button>
       </div>
     </aside>
   )

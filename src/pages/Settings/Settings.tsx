@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useChannels } from '../../hooks/useChannels'
 import { useAuth } from '../../lib/auth'
 import { isSupabaseConfigured } from '../../lib/supabase'
+import { FaCheckCircle, FaThList, FaUser, FaEye, FaEyeSlash, FaTrash } from 'react-icons/fa'
 import styles from './Settings.module.css'
 
 export function Settings() {
@@ -47,12 +48,7 @@ export function Settings() {
       {/* Connect Channel */}
       <section className={styles.card}>
         <div className={styles.cardHeader}>
-          <div className={styles.cardIcon}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
-              <path d="M8 12L11 15L16 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
+          <div className={styles.cardIcon}><FaCheckCircle size={20} /></div>
           <div>
             <h2 className={styles.cardTitle}>Підключити Telegram-канал</h2>
             <p className={styles.cardDesc}>
@@ -93,7 +89,7 @@ export function Settings() {
                   className={styles.toggleBtn}
                   onClick={() => setShowToken(!showToken)}
                 >
-                  {showToken ? '🙈' : '👁'}
+                  {showToken ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
                 </button>
               </div>
             </div>
@@ -124,12 +120,7 @@ export function Settings() {
       {/* Channels */}
       <section className={styles.card}>
         <div className={styles.cardHeader}>
-          <div className={styles.cardIcon}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <rect x="3" y="4" width="18" height="16" rx="3" stroke="currentColor" strokeWidth="1.5" />
-              <path d="M3 10H21" stroke="currentColor" strokeWidth="1.5" />
-            </svg>
-          </div>
+          <div className={styles.cardIcon}><FaThList size={20} /></div>
           <div>
             <h2 className={styles.cardTitle}>Ваші канали</h2>
           </div>
@@ -171,12 +162,7 @@ export function Settings() {
       {/* Account */}
       <section className={styles.card}>
         <div className={styles.cardHeader}>
-          <div className={styles.cardIcon}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5" />
-              <path d="M5 20C5 17.2 8.1 15 12 15C15.9 15 19 17.2 19 20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-          </div>
+          <div className={styles.cardIcon}><FaUser size={20} /></div>
           <div>
             <h2 className={styles.cardTitle}>Акаунт</h2>
           </div>
