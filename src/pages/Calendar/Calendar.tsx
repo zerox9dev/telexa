@@ -1,86 +1,72 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usePosts } from '../../hooks/usePosts'
+import { useChannels } from '../../hooks/useChannels'
 import styles from './Calendar.module.css'
-
-function getDaysInMonth(year: number, month: number) {
-  return new Date(year, month + 1, 0).getDate()
-}
-
-function getFirstDayOfMonth(year: number, month: number) {
-  return new Date(year, month, 1).getDay()
-}
 
 export function Calendar() {
   const navigate = useNavigate()
   const { posts } = usePosts()
-  
-  const [date, setDate] = useState(new Date())
-  const year = date.getFullYear()
-  const month = date.getMonth()
-  
-  const daysInMonth = getDaysInMonth(year, month)
-  const firstDay = getFirstDayOfMonth(year, month)
-  
-  // Adjust 0 (Sun) to 7 for Monday-first week
-  const startOffset = firstDay === 0 ? 6 : firstDay - 1
-  
-  const handlePrevMonth = () => {
-    setDate(new Date(year, month - 1, 1))
-  }
-  
-  const handleNextMonth = () => {
-    setDate(new Date(year, month + 1, 1))
-  }
+  const { channels } = useChannels()
 
-  const today = new Date()
-  const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month
+  // Current month state
+  const [currentDate, setCurrentDate] = useState(new Date())
 
-  // Build grid days (35 or 42 cells)
-  const cells = []
-  
-  // Previous month trailing days
-  const prevMonthDays = getDaysInMonth(year, month - 1)
-  for (let i = 0; i < startOffset; i++) {
-    cells.push({ day: prevMonthDays - startOffset + i + 1, isOther: true, m: month - 1 })
-  }
-  
-  // Current month days
-  for (let i = 1; i <= daysInMonth; i++) {
-    cells.push({ day: i, isOther: false, m: month })
-  }
-  
-  // Next month leading days
-  const remaining = 35 - cells.length
-  if (remaining > 0) {
-    for (let i = 1; i <= remaining; i++) {
-      cells.push({ day: i, isOther: true, m: month + 1 })
-    }
-  } else if (cells.length > 35) {
-    const rem42 = 42 - cells.length
-    for (let i = 1; i <= rem42; i++) {
-      cells.push({ day: i, isOther: true, m: month + 1 })
-    }
+  const year = currentDate.getFullYear()
+  const month = currentDate.getMonth()
+
+  // Nav helpers
+  const prevMonth = () => setCurrentDate(new Date(year, month - 1, 1))
+  const nextMonth = () => setCurrentDate(new Date(year, month + 1, 1))
+  const today = () => setCurrentDate(new Date())
+
+  // Calendar grid math
+  const daysInMonth = new Date(year, month + 1, 0).getDate()
+  const firstDayOfMonth = new Date(year, month, 1).getDay()
+  const startingBlanks = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1 // Start on Monday
+
+  const days = []
+  for (let i = 0; i < startingBlanks; i++) days.push(null)
+  for (let i = 1; i <= daysInMonth; i++) days.push(i)
+
+  // Group posts by YYYY-MM-DD
+  const postsByDate: Record<string, typeof posts> = {}
+  posts.forEach(post => {
+    const d = new Date(post.scheduled_at || post.created_at)
+    // Adjust to local timezone string YYYY-MM-DD
+    const dateStr = d.toLocaleDateString('en-CA') // YYYY-MM-DD format
+    if (!postsByDate[dateStr]) postsByDate[dateStr] = []
+    postsByDate[dateStr].push(post)
+  })
+
+  const getChannelColor = (channelId: string) => {
+    const idx = channels.findIndex(c => c.id === channelId)
+    const colors = ['var(--tg-blue)', 'var(--tg-purple)', 'var(--tg-orange)', 'var(--tg-green)']
+    return colors[Math.max(0, idx % colors.length)]
   }
 
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        <div>
+        <div className={styles.headerLeft}>
           <h1 className={styles.title}>Calendar</h1>
-          <p className={styles.subtitle}>Your posting schedule</p>
+          <p className={styles.subtitle}>
+            {currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
+          </p>
         </div>
-        
-        <div className={styles.controls}>
-          <button className={styles.navBtn} onClick={handlePrevMonth}>&lt;</button>
-          <div className={styles.monthLabel}>
-            {date.toLocaleString('en-US', { month: 'long', year: 'numeric' })}
+        <div className={styles.actions}>
+          <button className={styles.todayBtn} onClick={today}>Today</button>
+          <div className={styles.navGroup}>
+            <button className={styles.navBtn} onClick={prevMonth}>←</button>
+            <button className={styles.navBtn} onClick={nextMonth}>→</button>
           </div>
-          <button className={styles.navBtn} onClick={handleNextMonth}>&gt;</button>
+          <button className={styles.newPostBtn} onClick={() => navigate('/editor')}>
+            New Post
+          </button>
         </div>
       </header>
 
-      <div className={styles.calendarWrapper}>
+      <div className={styles.calendarCard}>
         <div className={styles.weekdays}>
           {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(d => (
             <div key={d} className={styles.weekday}>{d}</div>
@@ -88,48 +74,44 @@ export function Calendar() {
         </div>
         
         <div className={styles.grid}>
-          {cells.map((cell, idx) => {
-            const isToday = isCurrentMonth && !cell.isOther && cell.day === today.getDate()
+          {days.map((day, idx) => {
+            if (!day) return <div key={`blank-${idx}`} className={styles.emptyCell} />
+
+            // Build YYYY-MM-DD for this cell
+            const cellDate = new Date(year, month, day)
+            const dateStr = cellDate.toLocaleDateString('en-CA')
+            const dayPosts = postsByDate[dateStr] || []
             
-            // Filter posts for this specific day
-            const cellDate = new Date(year, cell.m, cell.day)
-            const cellDateStr = cellDate.toISOString().split('T')[0]
-            
-            const dayPosts = posts.filter(p => {
-              const postDate = new Date(p.scheduled_at || p.created_at)
-              return postDate.toISOString().split('T')[0] === cellDateStr && p.status !== 'draft'
-            }).sort((a, b) => {
-              const ta = new Date(a.scheduled_at || a.created_at).getTime()
-              const tb = new Date(b.scheduled_at || b.created_at).getTime()
-              return ta - tb
-            })
+            const isToday = new Date().toDateString() === cellDate.toDateString()
 
             return (
-              <div key={idx} className={`${styles.day} ${cell.isOther ? styles.otherMonth : ''}`}>
-                <span className={`${styles.dayNumber} ${isToday ? styles.today : ''}`}>
-                  {isToday ? <span className={styles.todayMarker}>{cell.day}</span> : cell.day}
-                </span>
+              <div key={day} className={`${styles.cell} ${isToday ? styles.today : ''}`}>
+                <div className={styles.cellHeader}>
+                  <span className={styles.dayNum}>{day}</span>
+                </div>
                 
-                <div className={styles.posts}>
+                <div className={styles.postList}>
                   {dayPosts.map(post => {
-                    const time = new Date(post.scheduled_at || post.created_at).toLocaleTimeString('en-US', {
-                      hour: '2-digit', minute: '2-digit', hour12: false
-                    })
+                    const time = new Date(post.scheduled_at || post.created_at)
+                      .toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                     
-                    const pillClass = post.status === 'published' 
-                      ? styles.pillPublished 
-                      : post.status === 'failed' 
-                        ? styles.pillFailed 
-                        : styles.pillScheduled
-
                     return (
                       <div 
                         key={post.id} 
-                        className={`${styles.postPill} ${pillClass}`}
+                        className={styles.postPill}
                         onClick={() => navigate(`/editor/${post.id}`)}
+                        title={post.text}
                       >
-                        <span className={styles.pillTime}>{time}</span>
-                        <span className={styles.pillText}>{post.text || 'Photo...'}</span>
+                        <div 
+                          className={styles.channelDot} 
+                          style={{ background: getChannelColor(post.channel_id) }}
+                        />
+                        <span className={styles.postTime}>{time}</span>
+                        <span className={styles.postPreview}>
+                          {post.media_url ? '📷 ' : ''}{post.text || 'Empty'}
+                        </span>
+                        {post.status === 'published' && <span className={styles.statusCheck}>✓</span>}
+                        {post.status === 'failed' && <span className={styles.statusFail}>!</span>}
                       </div>
                     )
                   })}
