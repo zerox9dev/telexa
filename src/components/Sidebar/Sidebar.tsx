@@ -7,6 +7,7 @@ const NAV_ITEMS = [
   { to: '/dashboard', icon: 'grid', label: 'Dashboard' },
   { to: '/calendar', icon: 'calendar', label: 'Calendar' },
   { to: '/editor', icon: 'edit', label: 'New Post' },
+  { to: '/autopilot', icon: 'sparkles', label: 'Auto-Pilot' },
   { to: '/settings', icon: 'settings', label: 'Settings' },
 ]
 
@@ -30,6 +31,11 @@ const ICONS: Record<string, React.ReactNode> = {
   edit: (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
       <path d="M13.5 3.5L16.5 6.5L6.5 16.5H3.5V13.5L13.5 3.5Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+    </svg>
+  ),
+  sparkles: (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <path d="M10 2l1.5 4.5L16 8l-4.5 1.5L10 14l-1.5-4.5L4 8l4.5-1.5L10 2z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
     </svg>
   ),
   settings: (

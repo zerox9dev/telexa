@@ -132,3 +132,50 @@ export async function improvePost(text: string, instruction: string): Promise<st
   }
   return callOpenAI(settings.apiKey, settings.model, prompt)
 }
+
+export interface AutoPilotOptions {
+  channelName: string
+  channelDescription: string
+  tone: string
+  postCount: number
+  topicPrompt: string
+  language: string
+}
+
+export async function generateAutoPilotDrafts(options: AutoPilotOptions): Promise<string[]> {
+  const settings = getAiSettings()
+  if (!settings) throw new Error('AI not configured. Add your API key in Settings.')
+
+  const prompt = `You are an expert Telegram content creator. I need you to generate exactly ${options.postCount} standalone posts for a channel.
+  
+Channel context: ${options.channelDescription}
+Tone of Voice: ${options.tone}
+Topic/Focus for these posts: ${options.topicPrompt}
+Language: ${options.language}
+
+CRITICAL RULES:
+- Return ONLY a raw JSON array of strings. 
+- Example format: ["Post 1 text...", "Post 2 text...", "Post 3 text..."]
+- NO markdown formatting around the JSON (no \`\`\`json).
+- NO extra conversational text.
+- Follow the Telegram style: use line breaks, very few emojis, no corporate speak.
+- Keep them engaging and ready to publish.`
+
+  let jsonText = ''
+  
+  if (settings.provider === 'anthropic') {
+    jsonText = await callAnthropic(settings.apiKey, settings.model, prompt)
+  } else {
+    jsonText = await callOpenAI(settings.apiKey, settings.model, prompt)
+  }
+  
+  try {
+    // Strip markdown code blocks just in case the LLM disobeys
+    jsonText = jsonText.replace(/^```json/m, '').replace(/^```/m, '').trim()
+    const parsed = JSON.parse(jsonText)
+    if (!Array.isArray(parsed)) throw new Error('LLM did not return an array')
+    return parsed
+  } catch (err) {
+    throw new Error('Failed to parse AI response. Try again.')
+  }
+}
