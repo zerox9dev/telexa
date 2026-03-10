@@ -452,3 +452,27 @@
     width: 100%;
   }
 }
+
+/* Mobile */
+@media (max-width: 768px) {
+  .heroTitle {
+    font-size: 28px;
+  }
+
+  .heroCta {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .featuresGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .plans {
+    grid-template-columns: 1fr;
+  }
+
+  .chatWindow {
+    max-width: 100%;
+  }
+}

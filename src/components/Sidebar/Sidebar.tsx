@@ -45,8 +45,9 @@ const ICONS: Record<string, React.ReactNode> = {
   ),
 }
 
-export function Sidebar() {
+export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const navigate = useNavigate()
+  const go = (path: string) => { navigate(path); onNavigate?.() }
   const { channels } = useChannels()
   const { posts } = usePosts()
 
@@ -56,7 +57,7 @@ export function Sidebar() {
 
   return (
     <aside className={styles.sidebar}>
-      <div className={styles.brand} onClick={() => navigate('/')}>
+      <div className={styles.brand} onClick={() => go('/')}>
         <div className={styles.logoMark}>
           <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
             <path d="M3 7.5L14 2L25 7.5V20.5L14 26L3 20.5V7.5Z" fill="#229ED9" />
@@ -66,7 +67,7 @@ export function Sidebar() {
         <span className={styles.logoName}>Telexa</span>
       </div>
 
-      <button className={styles.newPostBtn} onClick={() => navigate('/editor')}>
+      <button className={styles.newPostBtn} onClick={() => go('/editor')}>
         <span className={styles.newPostIcon}>+</span>
         Новий пост
       </button>
@@ -76,6 +77,7 @@ export function Sidebar() {
           <NavLink
             key={item.to}
             to={item.to}
+            onClick={onNavigate}
             className={({ isActive }: { isActive: boolean }) =>
               `${styles.navItem} ${isActive ? styles.active : ''}`
             }
@@ -89,7 +91,7 @@ export function Sidebar() {
       <div className={styles.channels}>
         <div className={styles.channelsHeader}>
           <span>Канали</span>
-          <button className={styles.addChannel} onClick={() => navigate('/settings')}>+</button>
+          <button className={styles.addChannel} onClick={() => go('/settings')}>+</button>
         </div>
         {channels.length === 0 ? (
           <div className={styles.noChannels}>Ще немає каналів</div>

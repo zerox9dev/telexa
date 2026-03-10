@@ -188,3 +188,14 @@
   font-size: 13px;
   font-weight: 600;
 }
+
+/* Mobile */
+@media (max-width: 768px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: 20px;
+  }
+}

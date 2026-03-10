@@ -457,3 +457,19 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Mobile */
+@media (max-width: 768px) {
+  .columns {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    order: -1;
+  }
+
+  .actions {
+    flex-wrap: wrap;
+  }
+}
