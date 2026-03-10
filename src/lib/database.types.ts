@@ -54,10 +54,5 @@ export interface Database {
         Update: Partial<Omit<Profile, 'id' | 'created_at'>>
       }
     }
-    Views: Record<string, never>
-    Functions: Record<string, never>
-    Enums: {
-      post_status: PostStatus
-    }
   }
 }
