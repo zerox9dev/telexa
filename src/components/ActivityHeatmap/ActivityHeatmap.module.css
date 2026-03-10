@@ -28,10 +28,10 @@
 }
 
 .level0 { background: var(--border-light); }
-.level1 { background: #9be9a8; }
-.level2 { background: #40c463; }
-.level3 { background: #30a14e; }
-.level4 { background: #216e39; }
+.level1 { background: #B8DBBE; }
+.level2 { background: #7CC48A; }
+.level3 { background: #55AB67; }
+.level4 { background: #3D7F4C; }
 
 .months {
   display: flex;

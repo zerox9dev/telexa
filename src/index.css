@@ -1,47 +1,63 @@
 @import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap');
 
 :root {
-  /* Telegram-DNA palette */
-  --tg-blue: #229ED9;
-  --tg-blue-hover: #1B8EC5;
-  --tg-blue-light: #E3F2FD;
-  --tg-blue-pale: #F5FAFF;
-  --tg-blue-glow: rgba(34, 158, 217, 0.12);
-  
-  --tg-green: #4CAF50;
-  --tg-green-light: #E8F5E9;
-  --tg-green-bubble: #EEFFDE;
-  
-  --tg-red: #E53935;
-  --tg-red-light: #FFEBEE;
-  --tg-orange: #FF9800;
-  --tg-purple: #7C4DFF;
-  
-  /* Surfaces — warm neutrals, not cold gray */
-  --bg: #F4F5F7;
-  --bg-subtle: #FAFBFC;
+  /* Brand */
+  --brand: #55AB67;
+  --brand-hover: #4A9A5C;
+  --brand-light: rgba(85, 171, 103, 0.1);
+  --brand-pale: rgba(85, 171, 103, 0.05);
+  --brand-glow: rgba(85, 171, 103, 0.12);
+
+  /* Semantic */
+  --alert: #EB4D3D;
+  --alert-light: rgba(235, 77, 61, 0.1);
+  --info: #F3B263;
+  --info-light: rgba(243, 178, 99, 0.1);
+  --social: #5B75A6;
+
+  /* Surfaces */
+  --bg: #F1EFE5;
+  --bg-subtle: #E6E3D6;
   --surface: #FFFFFF;
-  --surface-hover: #F8F9FA;
-  --surface-active: #F0F1F3;
+  --surface-hover: #F8F7F2;
+  --surface-active: #F1EFE5;
   --surface-elevated: #FFFFFF;
-  
+
   /* Borders */
-  --border: #E2E4E9;
-  --border-light: #ECEEF2;
-  --border-focus: var(--tg-blue);
-  
-  /* Text — high contrast hierarchy */
-  --text: #0F172A;
-  --text-secondary: #64748B;
-  --text-muted: #94A3B8;
-  --text-link: var(--tg-blue);
-  
+  --border: #DEDCD3;
+  --border-light: #DEDCD3;
+  --border-focus: var(--brand);
+
+  /* Text */
+  --text: #000000;
+  --text-secondary: #333333;
+  --text-muted: #999999;
+  --text-time: #6E664E;
+  --text-link: var(--brand);
+
   /* Chat bubbles */
-  --bubble-out: #EEFFDE;
-  --bubble-out-border: #D4EFC8;
+  --bubble-out: #D5CFB9;
+  --bubble-out-border: #C8C2AC;
   --bubble-in: #FFFFFF;
-  
-  /* Radius — slightly tighter = more professional */
+
+  /* Avatar */
+  --avatar: #E0E0E0;
+
+  /* Legacy aliases (for components that still use tg-* vars) */
+  --tg-blue: var(--brand);
+  --tg-blue-hover: var(--brand-hover);
+  --tg-blue-light: var(--brand-light);
+  --tg-blue-pale: var(--brand-pale);
+  --tg-blue-glow: var(--brand-glow);
+  --tg-green: var(--brand);
+  --tg-green-light: var(--brand-light);
+  --tg-green-bubble: #D5CFB9;
+  --tg-red: var(--alert);
+  --tg-red-light: var(--alert-light);
+  --tg-orange: var(--info);
+  --tg-purple: var(--social);
+
+  /* Radius */
   --radius-xs: 4px;
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -49,14 +65,14 @@
   --radius-xl: 18px;
   --radius-bubble: 16px;
   --radius-full: 9999px;
-  
-  /* Shadows — subtle, layered */
+
+  /* Shadows — warm tone */
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
   --shadow-float: 0 12px 40px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.05);
-  --shadow-blue: 0 4px 14px rgba(34, 158, 217, 0.2);
+  --shadow-blue: 0 4px 14px rgba(85, 171, 103, 0.2);
   
   /* Layout */
   --sidebar-width: 260px;
