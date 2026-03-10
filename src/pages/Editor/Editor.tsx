@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useChannels } from '../../hooks/useChannels'
 import { usePosts } from '../../hooks/usePosts'
 import { AiPanel } from '../../components/AiPanel/AiPanel'
+import { uploadMedia } from '../../lib/storage'
 import styles from './Editor.module.css'
 
 export function Editor() {
@@ -16,6 +17,7 @@ export function Editor() {
   const [scheduledAt, setScheduledAt] = useState('')
   const [saving, setSaving] = useState(false)
   const [sending, setSending] = useState(false)
+  const [uploadingMedia, setUploadingMedia] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [showAi, setShowAi] = useState(false)
@@ -37,11 +39,16 @@ export function Editor() {
       return
     }
 
-    const reader = new FileReader()
-    reader.onload = (event) => {
-      setMediaUrl(event.target?.result as string)
+    setUploadingMedia(true)
+    setError('')
+    try {
+      const url = await uploadMedia(file)
+      setMediaUrl(url)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Upload failed')
+    } finally {
+      setUploadingMedia(false)
     }
-    reader.readAsDataURL(file)
   }
 
   const handleSave = async (status: 'draft' | 'scheduled') => {
@@ -110,14 +117,14 @@ export function Editor() {
           <button
             className={styles.draftBtn}
             onClick={() => handleSave('draft')}
-            disabled={saving || sending}
+            disabled={saving || sending || uploadingMedia}
           >
             Save Draft
           </button>
           <button
             className={styles.scheduleBtn}
             onClick={() => handleSave('scheduled')}
-            disabled={saving || sending}
+            disabled={saving || sending || uploadingMedia}
           >
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
               <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.5" />
@@ -128,7 +135,7 @@ export function Editor() {
           <button
             className={styles.sendBtn}
             onClick={handleSendNow}
-            disabled={saving || sending}
+            disabled={saving || sending || uploadingMedia}
           >
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
               <path d="M2 3L14 8L2 13V9L10 8L2 7V3Z" fill="currentColor" />
@@ -191,7 +198,9 @@ export function Editor() {
                 maxLength={4096}
               />
               <div className={styles.textareaFooter}>
-                <label className={styles.attachBtn} title="Attach media">
+                <label className={styles.attachBtn} title="Attach media"
+                  className={uploadingMedia ? styles.attachBtnUploading : styles.attachBtn}
+                  style={{ opacity: uploadingMedia ? 0.5 : 1 }}>
                   <input 
                     type="file" 
                     accept="image/*" 
