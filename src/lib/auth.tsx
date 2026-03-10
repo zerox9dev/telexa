@@ -63,7 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // If Supabase is configured but user is not logged in, force them to land/login
   // The router handles redirection, but we can provide the sign in method here
   if (isSupabaseConfigured && loading) {
-    return <div className={styles.loadingScreen}>Loading Telexa...</div>
+    return <div className={styles.loadingScreen}>Завантаження Telexa...</div>
   }
 
   return (

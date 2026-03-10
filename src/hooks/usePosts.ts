@@ -70,7 +70,7 @@ export function usePosts(channelId?: string) {
     }
 
     const { data: user } = await supabase.auth.getUser()
-    if (!user.user) throw new Error('Not logged in')
+    if (!user.user) throw new Error('Ви не авторизовані')
 
     const { data, error } = await (supabase as any).from('posts').insert({
       user_id: user.user.id,
@@ -90,7 +90,7 @@ export function usePosts(channelId?: string) {
     if (!isSupabaseConfigured) {
       const all: Post[] = JSON.parse(localStorage.getItem('telexa_posts') || '[]')
       const idx = all.findIndex(p => p.id === postId)
-      if (idx === -1) throw new Error('Post not found')
+      if (idx === -1) throw new Error('Пост не знайдено')
       
       all[idx] = { ...all[idx], ...updates, updated_at: new Date().toISOString() }
       localStorage.setItem('telexa_posts', JSON.stringify(all))
@@ -126,7 +126,7 @@ export function usePosts(channelId?: string) {
     if (!isSupabaseConfigured) {
       const all: Post[] = JSON.parse(localStorage.getItem('telexa_posts') || '[]')
       const post = all.find(p => p.id === postId)
-      if (!post) throw new Error('Post not found')
+      if (!post) throw new Error('Пост не знайдено')
       const updated = await publishPost(post)
       setPosts(prev => prev.map(p => p.id === postId ? updated : p))
       return updated

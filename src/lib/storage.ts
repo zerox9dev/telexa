@@ -21,7 +21,7 @@ export async function uploadMedia(file: File): Promise<string> {
     .upload(filePath, file, { cacheControl: '3600', upsert: false })
 
   if (uploadError) {
-    throw new Error(`Failed to upload image: ${uploadError.message}`)
+    throw new Error(`Не вдалося завантажити зображення: ${uploadError.message}`)
   }
 
   const { data } = (supabase as any).storage.from('media').getPublicUrl(filePath)

@@ -36,7 +36,7 @@ export function AiPanel({ channelName, currentText, onGenerated, onClose }: AiPa
       })
       onGenerated(text)
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Generation failed')
+      setError(e instanceof Error ? e.message : 'Помилка генерації')
     } finally {
       setLoading(false)
     }
@@ -50,7 +50,7 @@ export function AiPanel({ channelName, currentText, onGenerated, onClose }: AiPa
       const text = await improvePost(currentText, instruction)
       onGenerated(text)
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed')
+      setError(e instanceof Error ? e.message : 'Помилка')
     } finally {
       setLoading(false)
     }
@@ -69,15 +69,15 @@ export function AiPanel({ channelName, currentText, onGenerated, onClose }: AiPa
         <div className={styles.header}>
           <div className={styles.headerLeft}>
             <span className={styles.sparkle}>✦</span>
-            <span className={styles.headerTitle}>AI Draft</span>
+            <span className={styles.headerTitle}>AI-чернетка</span>
           </div>
           <button className={styles.closeBtn} onClick={onClose}>×</button>
         </div>
         <div className={styles.body}>
           <div className={styles.notConfigured}>
-            <p className={styles.notConfiguredText}>Add your API key to use AI drafts</p>
+            <p className={styles.notConfiguredText}>Додайте API-ключ для використання AI-чернеток</p>
             <button className={styles.settingsLink} onClick={() => navigate('/settings')}>
-              Open Settings →
+              Відкрити налаштування →
             </button>
           </div>
         </div>
@@ -90,7 +90,7 @@ export function AiPanel({ channelName, currentText, onGenerated, onClose }: AiPa
       <div className={styles.header}>
         <div className={styles.headerLeft}>
           <span className={styles.sparkle}>✦</span>
-          <span className={styles.headerTitle}>AI Draft</span>
+          <span className={styles.headerTitle}>AI-чернетка</span>
           <span className={styles.badge}>{settings.provider === 'anthropic' ? 'Claude' : 'GPT'}</span>
         </div>
         <button className={styles.closeBtn} onClick={onClose}>×</button>
@@ -104,7 +104,7 @@ export function AiPanel({ channelName, currentText, onGenerated, onClose }: AiPa
             value={topic}
             onChange={e => setTopic(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Topic: e.g. React Server Components..."
+            placeholder="Тема: напр. React Server Components..."
             disabled={loading}
           />
           <button
@@ -112,7 +112,7 @@ export function AiPanel({ channelName, currentText, onGenerated, onClose }: AiPa
             onClick={handleGenerate}
             disabled={loading || !topic.trim()}
           >
-            Generate
+            Згенерувати
           </button>
         </div>
 
@@ -143,16 +143,16 @@ export function AiPanel({ channelName, currentText, onGenerated, onClose }: AiPa
         {hasText && (
           <div className={styles.improveRow}>
             <button className={styles.improveBtn} onClick={() => handleImprove('Make it shorter and punchier')} disabled={loading}>
-              ✂ Shorter
+              ✂ Коротше
             </button>
             <button className={styles.improveBtn} onClick={() => handleImprove('Expand with more details and examples')} disabled={loading}>
-              ↔ Expand
+              ↔ Розширити
             </button>
             <button className={styles.improveBtn} onClick={() => handleImprove('Make the hook stronger, more engaging first line')} disabled={loading}>
-              🎯 Better hook
+              🎯 Кращий хук
             </button>
             <button className={styles.improveBtn} onClick={() => handleImprove('Add a compelling call to action at the end')} disabled={loading}>
-              💬 Add CTA
+              💬 Додати CTA
             </button>
           </div>
         )}
@@ -160,7 +160,7 @@ export function AiPanel({ channelName, currentText, onGenerated, onClose }: AiPa
         {loading && (
           <div className={styles.loading}>
             <div className={styles.spinner} />
-            Generating...
+            Генерація...
           </div>
         )}
 

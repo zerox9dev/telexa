@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { useChannels } from '../../hooks/useChannels'
 import { useAuth } from '../../lib/auth'
 import { isSupabaseConfigured } from '../../lib/supabase'
-import { getAiSettings, saveAiSettings } from '../../lib/ai'
 import styles from './Settings.module.css'
 
 export function Settings() {

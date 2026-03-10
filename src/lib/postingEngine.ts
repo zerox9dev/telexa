@@ -30,9 +30,9 @@ export async function publishPost(post: Post): Promise<Post> {
 
   // Local mode: direct Telegram API calls (user's own bot token)
   const channel = loadChannels().find(c => c.id === post.channel_id)
-  if (!channel) throw new Error('Channel not found')
-  if (!channel.bot_token) throw new Error('Bot token missing')
-  if (!post.text?.trim() && !post.media_url) throw new Error('Post is empty')
+  if (!channel) throw new Error('Канал не знайдено')
+  if (!channel.bot_token) throw new Error('Токен бота відсутній')
+  if (!post.text?.trim() && !post.media_url) throw new Error('Пост порожній')
 
   try {
     if (post.media_url) {

@@ -39,14 +39,14 @@ export function useChannels() {
     }
 
     // Local mode: user provides their own bot token
-    if (!botToken) throw new Error('Bot token required in local mode')
+    if (!botToken) throw new Error('Токен бота обов\'язковий у локальному режимі')
     const bot = await getBot(botToken)
     const chatId = channelUsername.startsWith('@') ? channelUsername : `@${channelUsername}`
     const chat = await getChat(botToken, chatId)
 
     const isAdmin = await isBotAdmin(botToken, chat.id, bot.id)
     if (!isAdmin) {
-      throw new Error(`Bot @${bot.username} is not an admin in "${chat.title}". Add it as admin first.`)
+      throw new Error(`Бот @${bot.username} не є адміном у "${chat.title}". Спочатку додайте його як адміна.`)
     }
 
     const memberCount = await getChatMemberCount(botToken, chat.id)

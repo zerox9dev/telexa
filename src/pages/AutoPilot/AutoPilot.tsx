@@ -65,12 +65,12 @@ export function AutoPilot() {
     return (
       <div className={styles.page}>
         <div className={styles.card}>
-          <h2 className={styles.title}>AI Auto-Pilot</h2>
+          <h2 className={styles.title}>AI Автопілот</h2>
           <p className={styles.subtitle} style={{ marginTop: 12, marginBottom: 16 }}>
-            You need to configure your AI provider first to use Auto-Pilot.
+            Спочатку налаштуйте AI-провайдера, щоб використовувати Автопілот.
           </p>
           <button className={styles.settingsLink} onClick={() => navigate('/settings')}>
-            Go to Settings →
+            Перейти до налаштувань →
           </button>
         </div>
       </div>
@@ -82,9 +82,9 @@ export function AutoPilot() {
       <header className={styles.header}>
         <div>
           <h1 className={styles.title}>
-            Auto-Pilot <span className={styles.badge}>Beta</span>
+            Автопілот <span className={styles.badge}>Beta</span>
           </h1>
-          <p className={styles.subtitle}>Generate a whole week of content in one click.</p>
+          <p className={styles.subtitle}>Згенеруйте контент на цілий тиждень в один клік.</p>
         </div>
       </header>
 
@@ -94,7 +94,7 @@ export function AutoPilot() {
           {success && <div className={styles.success}>{success}</div>}
 
           <div className={styles.field}>
-            <label className={styles.label}>Target Channel</label>
+            <label className={styles.label}>Цільовий канал</label>
             <select className={styles.select} value={channelId} onChange={e => setChannelId(e.target.value)}>
               {channels.map(c => (
                 <option key={c.id} value={c.id}>{c.title}</option>
@@ -103,27 +103,27 @@ export function AutoPilot() {
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label}>Channel Context</label>
+            <label className={styles.label}>Контекст каналу</label>
             <textarea 
               className={styles.textarea} 
               value={channelDesc}
               onChange={e => setChannelDesc(e.target.value)}
-              placeholder="What is this channel about? Who is the audience?"
+              placeholder="Про що цей канал? Хто аудиторія?"
             />
           </div>
 
           <div className={styles.row}>
             <div className={styles.field}>
-              <label className={styles.label}>Tone of Voice</label>
+              <label className={styles.label}>Тон голосу</label>
               <input 
                 className={styles.input}
                 value={tone}
                 onChange={e => setTone(e.target.value)}
-                placeholder="e.g. Sarcastic, short, tech-savvy"
+                placeholder="напр. Саркастичний, короткий, технічний"
               />
             </div>
             <div className={styles.field}>
-              <label className={styles.label}>Language</label>
+              <label className={styles.label}>Мова</label>
               <select className={styles.select} value={language} onChange={e => setLanguage(e.target.value)}>
                 <option>Ukrainian</option>
                 <option>English</option>
@@ -133,18 +133,18 @@ export function AutoPilot() {
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label}>What should we write about?</label>
+            <label className={styles.label}>Про що писати?</label>
             <textarea 
               className={styles.textarea} 
               value={topic}
               onChange={e => setTopic(e.target.value)}
-              placeholder="e.g. 5 posts about modern frontend performance optimization..."
+              placeholder="напр. 5 постів про сучасну оптимізацію продуктивності фронтенду..."
               style={{ minHeight: 100 }}
             />
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label}>Number of Posts to Generate</label>
+            <label className={styles.label}>Кількість постів для генерації</label>
             <div className={styles.rangeWrap}>
               <input 
                 type="range" 
@@ -165,10 +165,10 @@ export function AutoPilot() {
             {loading ? (
               <>
                 <div className={styles.spinner} />
-                Writing drafts...
+                Пишемо чернетки...
               </>
             ) : (
-              `Generate ${postCount} Drafts`
+              `Згенерувати ${postCount} чернеток`
             )}
           </button>
         </div>

@@ -4,10 +4,10 @@ import { usePosts } from '../../hooks/usePosts'
 import styles from './Sidebar.module.css'
 
 const NAV_ITEMS = [
-  { to: '/dashboard', icon: 'grid', label: 'Dashboard' },
-  { to: '/editor', icon: 'edit', label: 'New Post' },
-  { to: '/autopilot', icon: 'sparkles', label: 'Auto-Pilot' },
-  { to: '/settings', icon: 'settings', label: 'Settings' },
+  { to: '/dashboard', icon: 'grid', label: 'Огляд' },
+  { to: '/editor', icon: 'edit', label: 'Новий пост' },
+  { to: '/autopilot', icon: 'sparkles', label: 'Автопілот' },
+  { to: '/settings', icon: 'settings', label: 'Налаштування' },
 ]
 
 const ICONS: Record<string, React.ReactNode> = {
@@ -68,7 +68,7 @@ export function Sidebar() {
 
       <button className={styles.newPostBtn} onClick={() => navigate('/editor')}>
         <span className={styles.newPostIcon}>+</span>
-        New Post
+        Новий пост
       </button>
 
       <nav className={styles.nav}>
@@ -88,11 +88,11 @@ export function Sidebar() {
 
       <div className={styles.channels}>
         <div className={styles.channelsHeader}>
-          <span>Channels</span>
+          <span>Канали</span>
           <button className={styles.addChannel} onClick={() => navigate('/settings')}>+</button>
         </div>
         {channels.length === 0 ? (
-          <div className={styles.noChannels}>No channels yet</div>
+          <div className={styles.noChannels}>Ще немає каналів</div>
         ) : (
           <div className={styles.channelList}>
             {channels.map(ch => (
@@ -110,9 +110,9 @@ export function Sidebar() {
           <div className={styles.usageBar}>
             <div className={styles.usageFill} style={{ width: `${pct}%` }} />
           </div>
-          <span className={styles.usageText}>{postCount} / {limit} posts</span>
+          <span className={styles.usageText}>{postCount} / {limit} постів</span>
         </div>
-        <button className={styles.upgrade}>Upgrade to Pro</button>
+        <button className={styles.upgrade}>Оновити до Pro</button>
       </div>
     </aside>
   )
