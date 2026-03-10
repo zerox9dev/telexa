@@ -29,7 +29,7 @@ export function Editor() {
 
   const selectedChannel = channels.find(c => c.id === channelId)
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
     
