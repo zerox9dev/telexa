@@ -6,7 +6,7 @@ import styles from './Dashboard.module.css'
 export function Dashboard() {
   const navigate = useNavigate()
   const { channels } = useChannels()
-  const { scheduled, published, posts } = usePosts()
+  const { scheduled, published } = usePosts()
 
   const totalViews = published.reduce((sum, p) => sum + (p.views || 0), 0)
 

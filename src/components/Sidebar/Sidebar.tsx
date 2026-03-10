@@ -10,7 +10,7 @@ const NAV_ITEMS = [
   { to: '/settings', icon: 'settings', label: 'Settings' },
 ]
 
-const ICONS: Record<string, JSX.Element> = {
+const ICONS: Record<string, React.ReactNode> = {
   grid: (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
       <rect x="2" y="2" width="7" height="7" rx="2" fill="currentColor" />
