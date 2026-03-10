@@ -68,8 +68,15 @@ export function Dashboard() {
                 className={styles.postItem}
                 onClick={() => navigate(`/editor/${post.id}`)}
               >
-                <div className={styles.postPreview}>
-                  {post.text.slice(0, 80)}{post.text.length > 80 ? '...' : ''}
+                <div className={styles.postContentWrap}>
+                  {post.media_url && (
+                    <div className={styles.postThumbnail}>
+                      <img src={post.media_url} alt="" className={styles.thumbnailImg} />
+                    </div>
+                  )}
+                  <div className={styles.postPreview}>
+                    {post.text.slice(0, 80)}{post.text.length > 80 ? '...' : ''}
+                  </div>
                 </div>
                 <div className={styles.postMeta}>
                   <span className={styles.postStatus}>⏳ Scheduled</span>
