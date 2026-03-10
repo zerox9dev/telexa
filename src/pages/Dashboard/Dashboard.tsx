@@ -7,10 +7,11 @@ import styles from './Dashboard.module.css'
 export function Dashboard() {
   const navigate = useNavigate()
   const { channels } = useChannels()
-  const { posts, scheduled, published } = usePosts()
+  const { posts, drafts, scheduled, published } = usePosts()
 
 
   const STATS = [
+    { label: 'Чернетки', value: String(drafts.length), icon: '📝', color: 'orange' },
     { label: 'Заплановані', value: String(scheduled.length), icon: '⏳', color: 'blue' },
     { label: 'Опубліковані', value: String(published.length), icon: '✓', color: 'green' },
     { label: 'Канали', value: String(channels.length), icon: '📢', color: 'purple' },
@@ -47,6 +48,32 @@ export function Dashboard() {
         </div>
         <ActivityHeatmap posts={posts} />
       </section>
+
+      {drafts.length > 0 && (
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Чернетки</h2>
+          </div>
+          <div className={styles.postList}>
+            {drafts.slice(0, 10).map(post => (
+              <div
+                key={post.id}
+                className={styles.postItem}
+                onClick={() => navigate(`/editor/${post.id}`)}
+              >
+                <div className={styles.postContentWrap}>
+                  <div className={styles.postPreview}>
+                    {post.text.slice(0, 100)}{post.text.length > 100 ? '...' : ''}
+                  </div>
+                </div>
+                <div className={styles.postMeta}>
+                  <span className={styles.postStatus}>📝 Чернетка</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
