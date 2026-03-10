@@ -94,6 +94,50 @@ export function Dashboard() {
         )}
       </section>
 
+      <section className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>Published</h2>
+        </div>
+
+        {published.length === 0 ? (
+          <div className={styles.emptyState}>
+            <div className={styles.emptyBubbles}>
+              <div className={styles.bubbleOut}>
+                <span>Published posts will show up here</span>
+                <span className={styles.bubbleTime}>—:—</span>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className={styles.postList}>
+            {published.slice(0, 10).map(post => (
+              <div key={post.id} className={styles.postItem}>
+                <div className={styles.postContentWrap}>
+                  {post.media_url && (
+                    <div className={styles.postThumbnail}>
+                      <img src={post.media_url} alt="" className={styles.thumbnailImg} />
+                    </div>
+                  )}
+                  <div className={styles.postPreview}>
+                    {post.text.slice(0, 80)}{post.text.length > 80 ? '...' : ''}
+                  </div>
+                </div>
+                <div className={styles.postMeta}>
+                  <span className={`${styles.postStatus} ${styles.statusPublished}`}>✓ Published</span>
+                  <span className={styles.postTime}>
+                    {post.published_at
+                      ? new Date(post.published_at).toLocaleString('en-US', {
+                          month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false,
+                        })
+                      : '—'}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
       {channels.length === 0 && (
         <section className={styles.section}>
           <div className={styles.onboarding}>
