@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { supabase, isSupabaseConfigured } from '../lib/supabase'
+import { connectChannel as connectChannelViaServer } from '../lib/api'
 import { getBot, getChat, getChatMemberCount, isBotAdmin } from '../lib/telegram'
 import type { Channel } from '../lib/database.types'
 
@@ -16,7 +17,7 @@ export function useChannels() {
       return
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('channels')
       .select('*')
       .order('created_at', { ascending: false })
@@ -29,8 +30,16 @@ export function useChannels() {
     fetchChannels()
   }, [fetchChannels])
 
-  const connectBot = async (botToken: string, channelUsername: string) => {
-    // 1. Validate bot & channel
+  const connectBot = async (channelUsername: string, botToken?: string) => {
+    // Supabase mode: use Edge Function (server-side bot)
+    if (isSupabaseConfigured) {
+      const result = await connectChannelViaServer(channelUsername)
+      if (result.channel) setChannels(prev => [result.channel, ...prev])
+      return result.channel
+    }
+
+    // Local mode: user provides their own bot token
+    if (!botToken) throw new Error('Bot token required in local mode')
     const bot = await getBot(botToken)
     const chatId = channelUsername.startsWith('@') ? channelUsername : `@${channelUsername}`
     const chat = await getChat(botToken, chatId)
@@ -42,39 +51,20 @@ export function useChannels() {
 
     const memberCount = await getChatMemberCount(botToken, chat.id)
 
-    // 2. Save
-    if (!isSupabaseConfigured) {
-      const channel: Channel = {
-        id: crypto.randomUUID(),
-        user_id: 'local-user',
-        bot_token: botToken,
-        chat_id: String(chat.id),
-        title: chat.title,
-        username: chat.username || null,
-        member_count: memberCount,
-        created_at: new Date().toISOString(),
-      }
-      const updated = [channel, ...channels]
-      setChannels(updated)
-      localStorage.setItem('telexa_channels', JSON.stringify(updated))
-      return channel
-    }
-
-    const { data: user } = await supabase.auth.getUser()
-    if (!user.user) throw new Error('Not logged in')
-
-    const { data, error } = await (supabase as any).from('channels').insert({
-      user_id: user.user.id,
+    const channel: Channel = {
+      id: crypto.randomUUID(),
+      user_id: 'local-user',
       bot_token: botToken,
       chat_id: String(chat.id),
       title: chat.title,
       username: chat.username || null,
       member_count: memberCount,
-    }).select().single()
-
-    if (error) throw new Error(error.message)
-    if (data) setChannels([data, ...channels])
-    return data
+      created_at: new Date().toISOString(),
+    }
+    const updated = [channel, ...channels]
+    setChannels(updated)
+    localStorage.setItem('telexa_channels', JSON.stringify(updated))
+    return channel
   }
 
   const removeChannel = async (channelId: string) => {

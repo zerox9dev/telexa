@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useChannels } from '../../hooks/useChannels'
 import { useAuth } from '../../lib/auth'
+import { isSupabaseConfigured } from '../../lib/supabase'
 import { getAiSettings, saveAiSettings } from '../../lib/ai'
 import styles from './Settings.module.css'
 
@@ -30,14 +31,14 @@ export function Settings() {
   }, [])
 
   const handleConnect = async () => {
-    if (!botToken.includes(':')) return setError('Invalid bot token format')
     if (!channelUsername.trim()) return setError('Enter channel username (e.g. @mychannel)')
+    if (!isSupabaseConfigured && !botToken.includes(':')) return setError('Invalid bot token format')
 
     setConnecting(true)
     setError('')
     setSuccess('')
     try {
-      const channel = await connectBot(botToken, channelUsername.trim())
+      const channel = await connectBot(channelUsername.trim(), isSupabaseConfigured ? undefined : botToken)
       setSuccess(`Connected "${channel.title}" ✓`)
       setBotToken('')
       setChannelUsername('')
@@ -58,7 +59,7 @@ export function Settings() {
     <div className={styles.page}>
       <header className={styles.header}>
         <h1 className={styles.title}>Settings</h1>
-        <p className={styles.subtitle}>Manage your bot, channels, and AI</p>
+        <p className={styles.subtitle}>Manage your channels and AI</p>
       </header>
 
       {/* Connect Channel */}
@@ -73,9 +74,18 @@ export function Settings() {
           <div>
             <h2 className={styles.cardTitle}>Connect Telegram Channel</h2>
             <p className={styles.cardDesc}>
-              1. Create a bot via <a href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a><br />
-              2. Add the bot as <strong>admin</strong> to your channel<br />
-              3. Paste the token and channel username below
+              {isSupabaseConfigured ? (
+                <>
+                  1. Add <strong>@TelexaAppBot</strong> as admin to your channel<br />
+                  2. Enter your channel username below
+                </>
+              ) : (
+                <>
+                  1. Create a bot via <a href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a><br />
+                  2. Add the bot as <strong>admin</strong> to your channel<br />
+                  3. Paste the token and channel username below
+                </>
+              )}
             </p>
           </div>
         </div>
@@ -84,25 +94,28 @@ export function Settings() {
         {success && <div className={styles.successMsg}>{success}</div>}
 
         <div className={styles.connectForm}>
-          <div className={styles.field}>
-            <label className={styles.fieldLabel}>Bot Token</label>
-            <div className={styles.tokenInput}>
-              <input
-                type={showToken ? 'text' : 'password'}
-                className={styles.input}
-                value={botToken}
-                onChange={e => setBotToken(e.target.value)}
-                placeholder="123456:ABC-DEF1234ghIkl-zyx57W2v"
-                spellCheck={false}
-              />
-              <button
-                className={styles.toggleBtn}
-                onClick={() => setShowToken(!showToken)}
-              >
-                {showToken ? '🙈' : '👁'}
-              </button>
+          {/* Only show bot token field in local mode */}
+          {!isSupabaseConfigured && (
+            <div className={styles.field}>
+              <label className={styles.fieldLabel}>Bot Token</label>
+              <div className={styles.tokenInput}>
+                <input
+                  type={showToken ? 'text' : 'password'}
+                  className={styles.input}
+                  value={botToken}
+                  onChange={e => setBotToken(e.target.value)}
+                  placeholder="123456:ABC-DEF1234ghIkl-zyx57W2v"
+                  spellCheck={false}
+                />
+                <button
+                  className={styles.toggleBtn}
+                  onClick={() => setShowToken(!showToken)}
+                >
+                  {showToken ? '🙈' : '👁'}
+                </button>
+              </div>
             </div>
-          </div>
+          )}
 
           <div className={styles.field}>
             <label className={styles.fieldLabel}>Channel Username</label>
@@ -119,7 +132,7 @@ export function Settings() {
           <button
             className={styles.connectBtn}
             onClick={handleConnect}
-            disabled={connecting || !botToken.includes(':')}
+            disabled={connecting || !channelUsername.trim()}
           >
             {connecting ? 'Connecting...' : 'Connect Channel'}
           </button>
