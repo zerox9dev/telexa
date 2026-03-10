@@ -198,8 +198,9 @@ export function Editor() {
                 maxLength={4096}
               />
               <div className={styles.textareaFooter}>
-                <label className={styles.attachBtn} title="Attach media"
+                <label
                   className={uploadingMedia ? styles.attachBtnUploading : styles.attachBtn}
+                  title="Attach media"
                   style={{ opacity: uploadingMedia ? 0.5 : 1 }}>
                   <input 
                     type="file" 
