@@ -95,10 +95,14 @@ app.include_router(autopilot_router.router, prefix="/api")
 _frontend_dist = os.path.join(os.path.dirname(__file__), "frontend_dist")
 if os.path.isdir(_frontend_dist):
     from fastapi.responses import FileResponse
+    from starlette.staticfiles import StaticFiles as _SF
 
-    app.mount("/assets", StaticFiles(directory=os.path.join(_frontend_dist, "assets")), name="assets")
-
+    # Catch-all SPA route must come before the static mount
     @app.get("/{full_path:path}", include_in_schema=False)
     async def serve_spa(full_path: str):
-        index = os.path.join(_frontend_dist, "index.html")
-        return FileResponse(index)
+        file = os.path.join(_frontend_dist, full_path)
+        if os.path.isfile(file):
+            return FileResponse(file)
+        return FileResponse(os.path.join(_frontend_dist, "index.html"))
+
+    app.mount("/", _SF(directory=_frontend_dist, html=True), name="frontend")
