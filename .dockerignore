@@ -1,0 +1,17 @@
+.env
+.git
+.DS_Store
+
+backend/venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/*.session
+backend/*.session-journal
+backend/media/
+
+frontend/node_modules/
+frontend/dist/
+
+*.md
+LICENSE
+docker-compose.yml
