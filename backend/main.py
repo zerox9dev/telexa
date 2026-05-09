@@ -10,10 +10,12 @@ from sqlalchemy import select
 from database import async_session_factory
 from models import TelegramSession
 from config import get_settings
-from settings_store import get_telegram_config
+from settings_store import get_telegram_config, get_setting
 import telegram_client as tc
 import ai_rewriter
+import autopilot
 from routers import auth, channels, posts, admin, setup as setup_router
+from routers import autopilot as autopilot_router
 
 settings = get_settings()
 
@@ -39,11 +41,17 @@ async def lifespan(app: FastAPI):
                         cfg.api_id,
                         cfg.api_hash,
                     )
+
+            # Start autopilot if enabled
+            enabled = await get_setting(db, "autopilot_enabled")
+            if enabled == "true":
+                autopilot.start()
     except Exception as e:
         print(f"[startup] Could not restore Telegram session: {e}")
 
     yield
 
+    autopilot.stop()
     await tc.disconnect_client()
     await ai_rewriter.close_clients()
 
@@ -81,6 +89,7 @@ app.include_router(auth.router, prefix="/api")
 app.include_router(channels.router, prefix="/api")
 app.include_router(posts.router, prefix="/api")
 app.include_router(admin.router, prefix="/api")
+app.include_router(autopilot_router.router, prefix="/api")
 
 # Serve built frontend if the dist directory exists (production Docker build)
 _frontend_dist = os.path.join(os.path.dirname(__file__), "frontend_dist")

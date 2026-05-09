@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Check, ChevronsUpDown, Loader2, LogIn, RefreshCw, Save } from 'lucide-react'
+import { Check, ChevronsUpDown, Loader2, LogIn, Play, RefreshCw, Save } from 'lucide-react'
 import { toast } from 'sonner'
 import { api, unwrap } from '../api/client'
 import { PublishLog } from '../types'
@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
 import { cn } from '@/lib/utils'
 
 interface OpenRouterModel {
@@ -43,6 +44,13 @@ interface AISettings {
   telegram_api_hash: string
   telegram_bot_token: string
   allowed_user_id: string
+}
+
+interface AutopilotSettings {
+  enabled: boolean
+  interval_minutes: number
+  rewrite: boolean
+  publish: boolean
 }
 
 interface SessionInfo {
@@ -84,6 +92,15 @@ export default function Admin({ onLogout }: Props) {
   const [tgAllowedUserId, setTgAllowedUserId] = useState('')
   const [tgSaving, setTgSaving] = useState(false)
 
+  const [autopilot, setAutopilot] = useState<AutopilotSettings>({
+    enabled: false,
+    interval_minutes: 30,
+    rewrite: true,
+    publish: true,
+  })
+  const [autopilotSaving, setAutopilotSaving] = useState(false)
+  const [autopilotRunning, setAutopilotRunning] = useState(false)
+
   async function loadSession() {
     setSessionLoading(true)
     try {
@@ -121,7 +138,36 @@ export default function Admin({ onLogout }: Props) {
     }
   }
 
+  async function saveAutopilot(patch: Partial<AutopilotSettings>) {
+    const next = { ...autopilot, ...patch }
+    setAutopilot(next)
+    setAutopilotSaving(true)
+    try {
+      await api.put('/autopilot', next)
+      toast.success(next.enabled ? 'Autopilot enabled' : 'Autopilot disabled')
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : 'Save failed')
+    } finally {
+      setAutopilotSaving(false)
+    }
+  }
+
+  async function runNow() {
+    setAutopilotRunning(true)
+    try {
+      await api.post('/autopilot/run')
+      toast.success('Cycle started')
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : 'Failed')
+    } finally {
+      setAutopilotRunning(false)
+    }
+  }
+
   useEffect(() => {
+    api.get('/autopilot').then(res => {
+      setAutopilot(unwrap<AutopilotSettings>(res))
+    }).catch(() => {})
     loadSession()
     api.get('/admin/settings').then(res => {
       const s = unwrap<AISettings>(res)
@@ -202,6 +248,73 @@ export default function Admin({ onLogout }: Props) {
     <AppShell onLogout={onLogout} header={header}>
       <div className="h-full overflow-y-auto">
         <div className="mx-auto max-w-5xl space-y-6 p-6">
+          {/* Autopilot */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Autopilot</CardTitle>
+                  <CardDescription className="mt-1">
+                    Automatically fetch, rewrite, and publish new posts on a schedule.
+                  </CardDescription>
+                </div>
+                <Switch
+                  checked={autopilot.enabled}
+                  onCheckedChange={v => saveAutopilot({ enabled: v })}
+                  disabled={autopilotSaving}
+                />
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-5">
+              <div className="grid gap-5 sm:grid-cols-3">
+                <div className="space-y-2">
+                  <Label htmlFor="ap-interval">Interval (minutes)</Label>
+                  <Input
+                    id="ap-interval"
+                    type="number"
+                    min={1}
+                    max={1440}
+                    value={autopilot.interval_minutes}
+                    onChange={e => setAutopilot(p => ({ ...p, interval_minutes: Number(e.target.value) }))}
+                    onBlur={() => saveAutopilot({})}
+                    className="font-mono"
+                  />
+                </div>
+                <div className="flex flex-col justify-end space-y-3">
+                  <div className="flex items-center justify-between rounded-sm border px-3 py-2">
+                    <Label htmlFor="ap-rewrite" className="cursor-pointer">AI rewrite</Label>
+                    <Switch
+                      id="ap-rewrite"
+                      checked={autopilot.rewrite}
+                      onCheckedChange={v => saveAutopilot({ rewrite: v })}
+                      disabled={autopilotSaving}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between rounded-sm border px-3 py-2">
+                    <Label htmlFor="ap-publish" className="cursor-pointer">Auto publish</Label>
+                    <Switch
+                      id="ap-publish"
+                      checked={autopilot.publish}
+                      onCheckedChange={v => saveAutopilot({ publish: v })}
+                      disabled={autopilotSaving}
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col justify-end">
+                  <Button variant="outline" onClick={runNow} disabled={autopilotRunning}>
+                    {autopilotRunning
+                      ? <Loader2 className="size-4 animate-spin" />
+                      : <Play className="size-4" />}
+                    Run now
+                  </Button>
+                </div>
+              </div>
+              <p className="font-mono text-[11px] text-muted-foreground">
+                Rewrite off → posts published as-is. Publish off → posts fetched &amp; rewritten but not sent.
+              </p>
+            </CardContent>
+          </Card>
+
           {/* Userbot session */}
           <Card>
             <CardHeader>
