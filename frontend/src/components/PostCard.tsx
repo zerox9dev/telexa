@@ -27,12 +27,12 @@ const STATUS_CLASS: Record<Post['status'], string> = {
 }
 
 export default function PostCard({ post, onClick }: Props) {
-  const mediaCount = post.media_paths?.length ?? 0
+  const mediaCount = post.media?.length ?? 0
 
   return (
     <button
       onClick={onClick}
-      className="flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-muted/40"
+      className="flex w-full min-w-0 items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-muted/40"
     >
       <Badge
         variant="outline"
@@ -48,7 +48,7 @@ export default function PostCard({ post, onClick }: Props) {
         }
       </span>
 
-      <div className="flex shrink-0 items-center gap-3 text-xs text-muted-foreground font-mono">
+      <div className="flex shrink-1 min-w-0 items-center gap-3 text-xs text-muted-foreground font-mono whitespace-nowrap">
         {mediaCount > 0 && (
           <span className="flex items-center gap-1 text-primary">
             <ImageIcon className="size-3" />

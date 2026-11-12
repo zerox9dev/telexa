@@ -1,6 +1,7 @@
 from functools import lru_cache
 from pydantic import field_validator
 from pydantic_settings import BaseSettings
+from sqlalchemy.engine import make_url
 
 
 class Settings(BaseSettings):
@@ -24,3 +25,13 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
+
+
+def get_async_database_url() -> str:
+    """DATABASE_URL with libpq-only query params stripped.
+
+    asyncpg rejects ``sslmode`` / ``channel_binding`` (which appear in e.g. Neon
+    connection strings), so they're removed here."""
+    url = make_url(get_settings().database_url)
+    url = url.difference_update_query(["sslmode", "channel_binding"])
+    return url.render_as_string(hide_password=False)

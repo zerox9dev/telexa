@@ -5,8 +5,3 @@ services:
     ports:
       - "80:80"
     env_file: .env
-    volumes:
-      - media_data:/app/media
-
-volumes:
-  media_data:

@@ -1,20 +1,18 @@
-import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
 from sqlalchemy import select
 
-from database import async_session_factory
+from core.database import async_session_factory, create_all_tables
+from core.config import get_settings
 from models import TelegramSession
-from config import get_settings
-from settings_store import get_telegram_config, get_setting
-import telegram_client as tc
-import ai_rewriter
-import autopilot
-from routers import auth, channels, posts, admin, setup as setup_router
+from services.settings import get_telegram_config, get_setting
+from services import autopilot
+from integrations import telegram as tc
+from integrations import ai
+from routers import auth, channels, posts, admin, media, setup as setup_router
 from routers import autopilot as autopilot_router
 
 settings = get_settings()
@@ -22,6 +20,9 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Ensure the schema exists (replaces Alembic for this single-user app).
+    await create_all_tables()
+
     # Try to restore Telethon session from DB on startup
     try:
         async with async_session_factory() as db:
@@ -43,17 +44,17 @@ async def lifespan(app: FastAPI):
                     )
 
             # Start autopilot if enabled
-            enabled = await get_setting(db, "autopilot_enabled")
-            if enabled == "true":
-                autopilot.start()
+            if await get_setting(db, "autopilot_enabled") == "true":
+                interval = int(await get_setting(db, "autopilot_interval_minutes") or "30")
+                autopilot.start(interval)
     except Exception as e:
         print(f"[startup] Could not restore Telegram session: {e}")
 
     yield
 
-    autopilot.stop()
+    await autopilot.shutdown()
     await tc.disconnect_client()
-    await ai_rewriter.close_clients()
+    await ai.close_clients()
 
 
 app = FastAPI(title="telexa", lifespan=lifespan)
@@ -81,8 +82,8 @@ async def generic_exception_handler(request: Request, exc: Exception):
     )
 
 
-os.makedirs("media", exist_ok=True)
-app.mount("/media", StaticFiles(directory="media"), name="media")
+# Media is stored in the DB and served from /media/{id} (no /api prefix).
+app.include_router(media.router)
 
 app.include_router(setup_router.router, prefix="/api")
 app.include_router(auth.router, prefix="/api")

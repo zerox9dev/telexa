@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database import get_db
-from deps import require_auth
-from settings_store import get_setting, set_setting
-import autopilot
+from core.database import get_db
+from core.security import require_auth
+from services.settings import get_setting, set_setting
+from services import autopilot
 
 router = APIRouter(prefix="/autopilot", tags=["autopilot"])
 
@@ -48,7 +48,7 @@ async def update_autopilot(
     await db.commit()
 
     if body.enabled:
-        autopilot.start()
+        autopilot.start(interval)
     else:
         autopilot.stop()
 
@@ -61,6 +61,5 @@ async def run_now(
     _=Depends(require_auth),
 ):
     """Trigger one cycle immediately."""
-    import asyncio
-    asyncio.create_task(autopilot._run_cycle())
+    autopilot.run_once()
     return {"data": {"ok": True}, "error": None}

@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database import get_db
-from settings_store import get_telegram_config, set_setting
+from core.database import get_db
+from services.settings import get_telegram_config, set_setting
 
 router = APIRouter(prefix="/setup", tags=["setup"])
 

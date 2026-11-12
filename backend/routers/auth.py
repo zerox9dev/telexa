@@ -7,10 +7,10 @@ from telethon import TelegramClient
 from telethon.sessions import StringSession
 from telethon.errors import SessionPasswordNeededError
 
-from database import get_db
+from core.database import get_db
 from models import TelegramSession
-from settings_store import get_telegram_config
-import telegram_client as tc
+from services.settings import get_telegram_config
+from integrations import telegram as tc
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 

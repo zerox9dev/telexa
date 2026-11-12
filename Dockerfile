@@ -25,7 +25,7 @@ COPY deploy/nginx.conf /etc/nginx/nginx.conf
 COPY deploy/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY deploy/entrypoint.sh /entrypoint.sh
 
-RUN mkdir -p media /var/log/supervisor \
+RUN mkdir -p /var/log/supervisor \
     && chmod +x /entrypoint.sh
 
 EXPOSE 80

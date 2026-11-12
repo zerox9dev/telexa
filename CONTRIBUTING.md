@@ -24,7 +24,7 @@ Thanks for your interest. Telexa is a small, focused tool — contributions that
 
 ## Making changes
 
-- **Backend** — FastAPI + SQLAlchemy async. All routes under `/api`, all responses `{ "data": ..., "error": null }`. New DB columns need an Alembic migration in `backend/alembic/versions/`.
+- **Backend** — FastAPI + SQLAlchemy async. All routes under `/api`, all responses `{ "data": ..., "error": null }`. Tables are auto-created from the models on startup (`create_all_tables()`); new *tables* appear automatically, but adding a column to an existing table won't apply to an already-created DB — run the `ALTER` manually or recreate the DB.
 - **Frontend** — Use shadcn/ui primitives from `@/components/ui/*`. Lucide icons. No new UI libraries without discussion.
 - **No `.env` with real credentials** in commits.
 

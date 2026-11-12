@@ -1,9 +1,10 @@
 from sqlalchemy import (
-    Column, Integer, BigInteger, String, Text, DateTime, ForeignKey, JSON, UniqueConstraint
+    Column, Integer, BigInteger, String, Text, DateTime, ForeignKey,
+    LargeBinary, UniqueConstraint,
 )
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, deferred
 from datetime import datetime
-from database import Base
+from core.database import Base
 
 
 class TelegramSession(Base):
@@ -54,16 +55,38 @@ class Post(Base):
     message_id = Column(BigInteger, nullable=False)
     original_text = Column(Text, default="")
     rewritten_text = Column(Text, nullable=True)
-    media_paths = Column(JSON, nullable=True)
-    media_types = Column(JSON, nullable=True)
     status = Column(String, default="new")
     target_channel_id = Column(Integer, ForeignKey("my_channels.id"), nullable=True)
     sent_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     source_channel = relationship("SourceChannel", back_populates="posts")
+    # Media metadata is loaded eagerly with the post; the blob itself is
+    # deferred so list/serialize never pulls bytes — only the /media/{id}
+    # endpoint un-defers `content`.
+    media = relationship(
+        "Media",
+        back_populates="post",
+        order_by="Media.position",
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )
 
     __table_args__ = (UniqueConstraint("source_channel_id", "message_id"),)
+
+
+class Media(Base):
+    __tablename__ = "media"
+
+    id = Column(Integer, primary_key=True)
+    post_id = Column(Integer, ForeignKey("posts.id", ondelete="CASCADE"), nullable=False)
+    position = Column(Integer, nullable=False, default=0)
+    media_type = Column(String, nullable=False)   # "photo" | "video"
+    mime = Column(String, nullable=True)
+    filename = Column(String, nullable=True)
+    content = deferred(Column(LargeBinary, nullable=False))
+
+    post = relationship("Post", back_populates="media")
 
 
 class Setting(Base):

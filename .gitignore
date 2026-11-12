@@ -12,3 +12,7 @@ venv/
 node_modules/
 frontend/dist/
 .DS_Store
+
+# Claude Code (локально, не коммитим)
+.claude/settings.local.json
+.claude/memory/

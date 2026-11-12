@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import httpx
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
@@ -5,10 +7,10 @@ from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 
-from database import get_db
+from core.database import get_db
+from core.security import require_auth
 from models import PublishLog, Post
-from deps import require_auth
-from settings_store import get_setting, set_setting
+from services.settings import get_setting, set_setting
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
@@ -117,10 +119,8 @@ async def get_logs(
     query = select(PublishLog).order_by(PublishLog.published_at.desc()).limit(100)
 
     if from_:
-        from datetime import datetime
         query = query.where(PublishLog.published_at >= datetime.fromisoformat(from_))
     if to:
-        from datetime import datetime
         query = query.where(PublishLog.published_at <= datetime.fromisoformat(to))
     if source_channel:
         query = query.where(PublishLog.source_channel_username.ilike(f"%{source_channel}%"))

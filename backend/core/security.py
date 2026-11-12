@@ -2,9 +2,9 @@ from fastapi import Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from database import get_db
+from core.database import get_db
 from models import TelegramSession
-from settings_store import get_telegram_config
+from services.settings import get_telegram_config
 
 
 async def require_auth(db: AsyncSession = Depends(get_db)) -> TelegramSession:

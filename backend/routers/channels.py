@@ -4,10 +4,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from pydantic import BaseModel
 
-from database import get_db
+from core.database import get_db
+from core.security import require_auth
 from models import MyChannel, SourceChannel
-from deps import require_auth
-import telegram_client as tc
+from integrations import telegram as tc
 
 router = APIRouter(prefix="/channels", tags=["channels"])
 

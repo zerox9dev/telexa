@@ -94,8 +94,7 @@ Requirements: Python 3.12+, Node.js 20+, PostgreSQL 14+
 cd backend
 python -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
-alembic upgrade head
-uvicorn main:app --reload --port 8000
+uvicorn main:app --reload --port 8000   # tables are auto-created on startup
 
 # Frontend (separate terminal)
 cd frontend

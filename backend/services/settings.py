@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from config import get_settings
+from core.config import get_settings
 from models import Setting
 
 

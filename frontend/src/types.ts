@@ -16,14 +16,19 @@ export interface SourceChannel {
   created_at: string
 }
 
+export interface MediaItem {
+  id: number
+  type: 'photo' | 'video'
+  url: string
+}
+
 export interface Post {
   id: number
   source_channel_id: number
   message_id: number
   original_text: string
   rewritten_text: string | null
-  media_paths: string[] | null
-  media_types: string[] | null
+  media: MediaItem[]
   status: 'new' | 'ready' | 'sent' | 'discarded'
   target_channel_id: number | null
   sent_at: string | null

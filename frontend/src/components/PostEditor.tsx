@@ -60,8 +60,7 @@ export default function PostEditor({ post, myChannels, onClose, onUpdate }: Prop
   )
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null)
 
-  const mediaPaths = post.media_paths || []
-  const mediaTypes = post.media_types || []
+  const media = post.media || []
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -150,18 +149,18 @@ export default function PostEditor({ post, myChannels, onClose, onUpdate }: Prop
           </Button>
         </div>
 
-        {mediaPaths.length > 0 && (
+        {media.length > 0 && (
           <div className="flex shrink-0 gap-2 overflow-x-auto border-b bg-muted/30 px-4 py-3">
-            {mediaPaths.map((path, i) => (
+            {media.map((m) => (
               <button
-                key={i}
-                onClick={() => mediaTypes[i] === 'photo' && setLightboxSrc(`/${path}`)}
+                key={m.id}
+                onClick={() => m.type === 'photo' && setLightboxSrc(m.url)}
                 className="size-20 shrink-0 overflow-hidden rounded-sm border bg-background"
               >
-                {mediaTypes[i] === 'photo' ? (
-                  <img src={`/${path}`} alt="" className="size-full object-cover" />
+                {m.type === 'photo' ? (
+                  <img src={m.url} alt="" className="size-full object-cover" />
                 ) : (
-                  <video src={`/${path}`} className="size-full object-cover" muted />
+                  <video src={m.url} className="size-full object-cover" muted />
                 )}
               </button>
             ))}
